@@ -1,0 +1,19 @@
+<div class="container">
+  <br /><br /><br />
+  <h2>MVC Exemplo Node.JS teste</h2>
+  <br />
+  <% if (news.length> 0) { %>
+    <div class="row">
+      <% for(var i=0; i < news.length; i++) {%>
+        <div class="col-md-12 jumbotron">
+          <h4>
+            <%= news[i].titulo %>
+          </h4>
+          <p>
+            <%= news[i].noticia %>
+          </p>
+        </div>
+        <% } %>
+    </div>
+    <% } %>
+</div>
