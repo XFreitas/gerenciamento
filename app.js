@@ -6,6 +6,7 @@ const app = express();
 app.set('view engine', 'ejs');
 app.set('views', './src/views');
 app.use('/assets', express.static('assets'));
+app.use('/node_modules', express.static('node_modules'));
 
 consign()
     .include('./src/routes')
@@ -18,5 +19,5 @@ app.listen(3000, () => {
 });
 
 app.get('*', function (req, res) {
-    res.render('errors/404');
+    res.status(404).render('errors/404');
 });

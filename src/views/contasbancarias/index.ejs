@@ -1,0 +1,71 @@
+<div class="row">
+  <div class="col-8">
+    <h1 class="mt-4">Conta bancária</h1>
+    <ol class="breadcrumb mb-4">
+      <li class="breadcrumb-item"><a href="index.html">Início</a></li>
+      <li class="breadcrumb-item active">Conta bancária</li>
+    </ol>
+  </div>
+  <div class="col-4 my-auto d-flex flex-row-reverse">
+    <button type="button" class="btn btn-primary" onclick="showModal();">Nova conta bancária</button>
+  </div>
+</div>
+<div class="card mb-4">
+  <div class="card-body">
+    <p class="mb-0">
+      This page is an example of using static navigation. By removing the
+      <code>.sb-nav-fixed</code>
+      class from the
+      <code>body</code>
+      , the top navigation and side navigation will become static on scroll. Scroll down this page to see an example.
+    </p>
+  </div>
+</div>
+<div style="height: 100vh"></div>
+<div class="card mb-4">
+  <div class="card-body">When scrolling, the navigation stays at the top of the page. This is the end of the static navigation demo.</div>
+</div>
+
+<div class="modal fade" id="crud" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"></h5>
+      </div>
+      <div class="modal-body mx-auto">
+        <div class="spinner-border" role="status"></div>
+      </div>
+      <div class="modal-footer"></div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  const modalElement = document.getElementById('crud');
+  
+  modalElement.addEventListener('hidden.bs.modal', function(event) {
+    modalElement.innerHTML = '<div class="modal-dialog">' +
+      '  <div class="modal-content">' +
+      '    <div class="modal-header">' +
+      '      <h5 class="modal-title"></h5>' +
+      '    </div>' +
+      '    <div class="modal-body mx-auto">' +
+      '      <div class="spinner-border" role="status"></div>' +
+      '    </div>' +
+      '    <div class="modal-footer"></div>' +
+      '  </div>' +
+      '</div>';
+  });
+
+  function showModal() {
+    const myModal = bootstrap.Modal.getOrCreateInstance(modalElement);
+
+    axios.get('/contasbancarias/create').then(html => {
+      modalElement.innerHTML = html.data;
+      myModal.show();
+    }).catch(error => {
+      console.log(error);
+      myModal.hide();
+    });
+  }
+</script>
