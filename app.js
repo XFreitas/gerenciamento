@@ -11,7 +11,6 @@ app.use('/node_modules', express.static('node_modules'));
 consign()
     .include('./src/routes')
     .then('src/libraries')
-    // .then('src/configs')
     .into(app);
 
 app.listen(3000, () => {
