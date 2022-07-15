@@ -42,7 +42,7 @@
 
 <script type="text/javascript">
   const modalElement = document.getElementById('crud');
-  
+
   modalElement.addEventListener('hidden.bs.modal', function(event) {
     modalElement.innerHTML = '<div class="modal-dialog">' +
       '  <div class="modal-content">' +
@@ -60,9 +60,15 @@
   function showModal() {
     const myModal = bootstrap.Modal.getOrCreateInstance(modalElement);
 
+    myModal.show();
+
     axios.get('/contasbancarias/create').then(html => {
       modalElement.innerHTML = html.data;
-      myModal.show();
+      let scripts = modalElement.getElementsByTagName('script');
+
+      for (let i = 0; i < scripts.length; i++) {
+        eval(scripts[i].innerHTML);
+      }
     }).catch(error => {
       console.log(error);
       myModal.hide();

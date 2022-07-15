@@ -23,9 +23,30 @@ window.addEventListener('DOMContentLoaded', event => {
         });
     }
 
-    Object.prototype.mask = function (mask) {
-        this.addEventListener('keyup', event => {
-            console.log(event.target.value);
-        });
+    Object.prototype.mask = function (mask, options = {}) {
+        if (typeof this.dataset.value == 'undefined') {
+
+            this.dataset.value = '';
+            this.maxLength = mask.length;
+
+            this.addEventListener('input', event => {
+                if (typeof event.data === 'string') {
+                    event.target.dataset.value += event.data;
+                } else {
+                    event.target.dataset.value = event.target.dataset.value.slice(0, -1);
+                }
+
+                let formatter = new StringMask(mask, options);
+                let result = formatter.apply(event.target.dataset.value);
+
+                event.target.value = result;
+            });
+        }
+    }
+
+    String.prototype.toHtml = function () {
+        var parser = new DOMParser();
+        var doc = parser.parseFromString(this, 'text/html');
+        return doc.body.firstChild;
     }
 });

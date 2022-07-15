@@ -20,3 +20,14 @@
     </div>
   </div>
 </div>
+
+<script type="text/javascript">
+  {
+    modalElement.addEventListener('shown.bs.modal', function(event) {
+      let input = document.getElementById('exampleFormControlInput1');
+
+      input.focus();
+      input.mask('00\/00\/0000');
+    });
+  }
+</script>
