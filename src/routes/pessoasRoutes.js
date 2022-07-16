@@ -15,6 +15,10 @@ module.exports = function (application) {
     });
 
     application.get(baseUri('create'), function (req, res) {
+        pessoaController.loadmodal(req, res);
+    });
+
+    application.post(baseUri('create'), function (req, res) {
         pessoaController.create(req, res);
     });
 }

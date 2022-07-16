@@ -2,7 +2,7 @@
 
 const sequelize = require('../src/configs/db');
 const {
-  Sequelize, DataTypes, Model
+  DataTypes, Model
 } = require('sequelize');
 
 module.exports = () => {

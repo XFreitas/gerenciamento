@@ -13,9 +13,9 @@ window.addEventListener('DOMContentLoaded', event => {
     const sidebarToggle = document.body.querySelector('#sidebarToggle');
     if (sidebarToggle) {
         // Uncomment Below to persist sidebar toggle between refreshes
-        // if (localStorage.getItem('sb|sidebar-toggle') === 'true') {
-        //     document.body.classList.toggle('sb-sidenav-toggled');
-        // }
+        if (localStorage.getItem('sb|sidebar-toggle') === 'true') {
+            document.body.classList.toggle('sb-sidenav-toggled');
+        }
         sidebarToggle.addEventListener('click', event => {
             event.preventDefault();
             document.body.classList.toggle('sb-sidenav-toggled');
@@ -24,25 +24,37 @@ window.addEventListener('DOMContentLoaded', event => {
     }
 
     Object.prototype.mask = function (mask, options = {}) {
-        console.log('masking');
-        if (typeof this.dataset.value == 'undefined') {
+        this.dataset.value = '';
+        this.maxLength = mask.length;
 
-            this.dataset.value = '';
-            this.maxLength = mask.length;
 
-            this.addEventListener('input', event => {
-                if (typeof event.data === 'string') {
-                    event.target.dataset.value += event.data;
-                } else {
-                    event.target.dataset.value = event.target.dataset.value.slice(0, -1);
+        this.addEventListener('input', event => {
+            if (typeof event.data === 'string') {
+                event.target.dataset.value += event.data;
+            } else {
+                event.target.dataset.value = event.target.dataset.value.slice(0, -1);
+            }
+
+            let formatter = new StringMask(mask, options);
+            let result = formatter.apply(event.target.dataset.value);
+
+            event.target.value = result;
+        });
+    }
+
+    Object.prototype.serializeObject = function () {
+        const formData = {};
+        if (this.tagName.toLowerCase() == 'form') {
+            const children = this.querySelectorAll('[name]:not(:disabled)');
+
+            children.forEach(child => {
+                if (child.value != '') {
+                    formData[child.name] = child.value;
                 }
-
-                let formatter = new StringMask(mask, options);
-                let result = formatter.apply(event.target.dataset.value);
-
-                event.target.value = result;
             });
         }
+
+        return formData;
     }
 
     String.prototype.toHtml = function () {

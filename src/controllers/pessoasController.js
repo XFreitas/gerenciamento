@@ -9,25 +9,22 @@ module.exports = class Pessoas {
         template(this.application, res, "pessoas/index", {});
     }
 
-    async create(req, res) {
+    loadmodal(req, res) {
         const data = {};
-        try {
-            const Tipocontas = require('../../models/tipocontas');
-            const tipoconta = Tipocontas();
-            data['options'] = [{ value: '', text: 'Selecione' }];
 
-            let tipocontas = await tipoconta.findAll();
+        res.render("pessoas/createUpdate", data);
+    }
 
-            tipocontas.forEach(tipoconta => {
-                data['options'].push({
-                    value: tipoconta.id,
-                    text: tipoconta.nome,
-                });
-            });
-        } catch (error) {
-            console.log(error);
-        }
+    create(req, res) {
+        console.log(req.body);
 
-        res.render("contasbancarias/createUpdate", data);
+        const PessoaModel = require("../../models/pessoa");
+        const pessoaModel = PessoaModel();
+
+        pessoaModel.create(req.body).then(pessoa => {
+            console.log(pessoa.id);
+        });
+
+        res.send("create");
     }
 }
