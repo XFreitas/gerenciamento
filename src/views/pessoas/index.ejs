@@ -1,9 +1,9 @@
 <div class="row">
   <div class="col-8">
-    <h1 class="mt-4">Conta bancária</h1>
+    <h1 class="mt-4">Titular</h1>
     <ol class="breadcrumb mb-4">
       <li class="breadcrumb-item"><a href="index.html">Início</a></li>
-      <li class="breadcrumb-item active">Conta bancária</li>
+      <li class="breadcrumb-item active">Titular</li>
     </ol>
   </div>
   <div class="col-4 my-auto d-flex flex-row-reverse">
@@ -41,9 +41,9 @@
 </div>
 
 <script type="text/javascript">
-  const modalElement = document.getElementById('crud');
+  function showModal(title, body, footer) {
+    const modalElement = document.getElementById('crud');
 
-  function showModal() {
-    modalElement.loadModal('/contasbancarias/create');
+    modalElement.loadModal('/pessoas/create');
   }
 </script>

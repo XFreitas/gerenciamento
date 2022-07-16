@@ -1,17 +1,17 @@
 <div class="modal-dialog">
   <div class="modal-content">
     <div class="modal-header">
-      <h5 class="modal-title">Cadastrar conta bancaria</h5>
+      <h5 class="modal-title">Criar conta bancaria</h5>
       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
     </div>
     <div class="modal-body">
       <div class="mb-3">
-        <label for="tipoconta" class="form-label">Tipo da conta</label>
-        <select class="form-select" id="tipoconta">
-          <% options.forEach(option => { %>
-          <option value="<%= option.value %> "><%= option.text %> </option>
-          <% }) %>
-        </select>
+        <label for="exampleFormControlInput1" class="form-label">Email address</label>
+        <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com">
+      </div>
+      <div class="mb-3">
+        <label for="exampleFormControlInput1" class="form-label">Email address</label>
+        <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com">
       </div>
       <div class="mb-3">
         <label for="exampleFormControlTextarea1" class="form-label">Example textarea</label>
@@ -27,16 +27,11 @@
 
 <script type="text/javascript">
   {
-    let modal = document.getElementById('crud');
+    modalElement.addEventListener('shown.bs.modal', function(event) {
+      let input = document.getElementById('exampleFormControlInput1');
 
-    function init() {
-      console.log('init');
-      let selector = document.querySelector('.modal #tipoconta');
-
-      selector.focus();
-      // input.mask('00\/00\/0000');
-    }
-
-    setTimeout(() => init(), 250);
+      input.focus();
+      input.mask('00\/00\/0000');
+    });
   }
 </script>

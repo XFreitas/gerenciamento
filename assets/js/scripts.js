@@ -24,6 +24,7 @@ window.addEventListener('DOMContentLoaded', event => {
     }
 
     Object.prototype.mask = function (mask, options = {}) {
+        console.log('masking');
         if (typeof this.dataset.value == 'undefined') {
 
             this.dataset.value = '';
@@ -48,5 +49,42 @@ window.addEventListener('DOMContentLoaded', event => {
         var parser = new DOMParser();
         var doc = parser.parseFromString(this, 'text/html');
         return doc.body.firstChild;
+    }
+
+    Object.prototype.loadModal = function (url) {
+        this.addEventListener('hidden.bs.modal', function () {
+            this.innerHTML = '<div class="modal-dialog">' +
+                '  <div class="modal-content">' +
+                '    <div class="modal-header">' +
+                '      <h5 class="modal-title"></h5>' +
+                '    </div>' +
+                '    <div class="modal-body mx-auto">' +
+                '      <div class="spinner-border" role="status"></div>' +
+                '    </div>' +
+                '    <div class="modal-footer"></div>' +
+                '  </div>' +
+                '</div>';
+        });
+
+        const myModal = bootstrap.Modal.getOrCreateInstance(this);
+
+        myModal.show();
+
+        axios.get(url).then(html => {
+            this.innerHTML = html.data;
+            let scripts = this.getElementsByTagName('script');
+
+            let range = document.createRange();
+            range.setStart(this, 0);
+            let string = '';
+            for (let i = 0; i < scripts.length; i++) {
+                let s = scripts[i];
+                string += s.outerHTML;
+            }
+            this.appendChild(range.createContextualFragment(string));
+        }).catch(error => {
+            console.log(error);
+            myModal.hide();
+        });
     }
 });

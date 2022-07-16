@@ -1,5 +1,4 @@
-const { default: axios } = require('axios');
-const ContasBancarias = require('../controllers/contasbancarias');
+const ContasBancarias = require("../controllers/contasbancariasController");
 
 const baseUri = function (uri) {
     if (uri) {
