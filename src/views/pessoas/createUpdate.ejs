@@ -1,14 +1,18 @@
 <div class="modal-dialog">
   <div class="modal-content">
-    <form action="/pessoas/create" method="post" id="formpessoa">
+    <form action="/pessoas/inserireditar" method="<%= pessoa ? 'put' : 'post' %>" id="formpessoa">
+      <input type="hidden" name="id" value="<%= pessoa ? pessoa.id : '' %>">
       <div class="modal-header">
-        <h5 class="modal-title">Cadastrar pessoa</h5>
+        <h5 class="modal-title">
+          <button type="button" class="btn btn-primary btn-sm" onclick="document.getElementById('crud').loadModal()"><i class="fas fa-sync-alt"></i></button>
+          <%= pessoa ? 'Atualizar' : 'Cadastrar' %> pessoa
+        </h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <div class="mb-3">
           <label for="nome" class="form-label">Nome</label>
-          <input type="text" class="form-control text-uppercase" id="nome" name="nome" placeholder="Digite um nome aqui...">
+          <input type="text" class="form-control text-uppercase" id="nome" value="<%= pessoa ? pessoa.nome : '' %>" name="nome" placeholder="Digite um nome aqui..." autocomplete="off">
         </div>
       </div>
       <div class="modal-footer">
@@ -29,21 +33,11 @@
       input.focus();
 
       const form = document.querySelector(".modal form#formpessoa");
-      const actionUrl = form.getAttribute("action");
-
-      form.addEventListener('submit', function(event) {
-        event.preventDefault();
-
-        const formData = form.serializeObject();
-
-        axios
-          .post(actionUrl, formData)
-          .then(function(response) {
-            console.log(response);
-          })
-          .catch(function(error) {
-            console.log(error);
-          });
+      form.submitModal({
+        success: (response) => {
+          console.log(response);
+          window.location.reload();
+        }
       });
     }
 

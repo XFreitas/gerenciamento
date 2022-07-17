@@ -14,11 +14,15 @@ module.exports = function (application) {
         pessoaController.index(req, res);
     });
 
-    application.get(baseUri('create'), function (req, res) {
+    application.get(baseUri('inserireditar'), function (req, res) {
         pessoaController.loadmodal(req, res);
     });
 
-    application.post(baseUri('create'), function (req, res) {
+    application.post(baseUri('inserireditar'), function (req, res) {
         pessoaController.create(req, res);
+    });
+
+    application.put(baseUri('inserireditar'), function (req, res) {
+        pessoaController.update(req, res);
     });
 }
