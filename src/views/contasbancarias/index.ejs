@@ -11,19 +11,28 @@
   </div>
 </div>
 <div class="card mb-4">
-  <div class="card-body">
-    <p class="mb-0">
-      This page is an example of using static navigation. By removing the
-      <code>.sb-nav-fixed</code>
-      class from the
-      <code>body</code>
-      , the top navigation and side navigation will become static on scroll. Scroll down this page to see an example.
-    </p>
-  </div>
-</div>
-<div style="height: 100vh"></div>
-<div class="card mb-4">
-  <div class="card-body">When scrolling, the navigation stays at the top of the page. This is the end of the static navigation demo.</div>
+  <table class="table">
+    <thead>
+      <tr>
+        <th style="width: 1%;" scope="col">#</th>
+        <th scope="col">Nome e sobrenome</th>
+        <th style="width: 1%;" scope="col">Handle</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% contasbancarias.forEach(contabancaria => { %>
+      <tr>
+        <th scope="row"><%= contabancaria.id %></th>
+        <td><%= contabancaria.numero %></td>
+        <td class="text-center">
+          <a style="cursor: pointer;" onclick="showModal('<%= contabancaria.id %>');">
+            <i class="fas fa-pencil"></i>
+          </a>
+        </td>
+      </tr>
+      <% }) %>
+    </tbody>
+  </table>
 </div>
 
 <div class="modal fade" id="crud" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">

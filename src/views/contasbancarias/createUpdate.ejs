@@ -8,14 +8,26 @@
       <div class="mb-3">
         <label for="tipoconta" class="form-label">Tipo da conta</label>
         <select class="form-select" id="tipoconta">
-          <% options.forEach(option => { %>
-          <option value="<%= option.value %> "><%= option.text %> </option>
+          <% tiposconta.forEach(tipoconta => { %>
+          <option value="<%= tipoconta.value %> "><%= tipoconta.text %> </option>
           <% }) %>
         </select>
       </div>
       <div class="mb-3">
-        <label for="exampleFormControlTextarea1" class="form-label">Example textarea</label>
-        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+        <label for="pessoa" class="form-label">Pessoa</label>
+        <select class="form-select" id="pessoa">
+          <% pessoas.forEach(pessoa => { %>
+          <option value="<%= pessoa.value %> "><%= pessoa.text %> </option>
+          <% }) %>
+        </select>
+      </div>
+      <div class="mb-3">
+        <label for="numero" class="form-label">Número</label>
+        <input type="text" name="numero" id="numero" autocomplete="off" class="form-control" placeholder="Digite a conta com o dígito...">
+      </div>
+      <div class="mb-3">
+        <label for="descricao" class="form-label">Descrição</label>
+        <textarea class="form-control" id="descricao" name="descricao" rows="3"></textarea>
       </div>
     </div>
     <div class="modal-footer">
@@ -32,9 +44,12 @@
     function init() {
       console.log('init');
       let selector = document.querySelector('.modal #tipoconta');
-
       selector.focus();
-      // input.mask('00\/00\/0000');
+
+      let input = document.querySelector('.modal #numero');
+      input.mask('##########-#', {
+        reverse: true
+      });
     }
 
     setTimeout(() => init(), 250);
