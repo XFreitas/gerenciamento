@@ -20,7 +20,6 @@
       </tr>
     </thead>
     <tbody>
-      
     </tbody>
   </table>
 </div>
@@ -54,8 +53,37 @@
       headElement.appendChild(createdLinkElement);
 
       const table = new JSTable(tableElement, {
+        // searchable: false,
         serverSide: true,
         ajax: `/pessoas/serverprocessing`,
+        columns: [
+          {
+            select: 0,
+            sortable: true,
+            sort: "desc"
+          },
+          {
+            select: 1
+          },
+          {
+            select: 2,
+            sortable: false,
+            searchable: false,
+            render: (cell, idx) => `<div class="text-center"><a style="cursor: pointer" onclick="showModal(${cell.textContent});"><i class="fas fa-pencil"></i></a></div>`
+          }
+        ],
+        labels: {
+          placeholder: "Procure...",
+          perPage: "Exibindo {select} registros por página",
+          noRows: "Nenhum registro encontrado",
+          info: "Exibindo {start} até {end} de {rows} registro(s)",
+          loading: "Processando...",
+          infoFiltered: "Exibindo {start} até {end} de {rows} registro(s) (filtrado de {rowsTotal} registros)"
+        },
+      });
+
+      table.on("init", function () {
+        console.log(Array.prototype.slice.call(document.querySelectorAll(".dt-wrapper")));
       });
     });
 

@@ -16,6 +16,16 @@ class Pessoa extends MainModel {
   static associate(models) {
     // define association here
   }
+
+  static serverProcessing = async (params = {}) => MainModel.serverProcessingMain({
+    ...params,
+    columns: ["cod", "nome", "id"],
+    colsOrder: ["cod", "nome"],
+    colsWhere: ["id", "nome"],
+    priorityGroupColumn: 'id',
+    select: `SELECT id AS cod, nome, id`,
+    from_join: `FROM Pessoas`,
+  });
 }
 
 Pessoa.init({

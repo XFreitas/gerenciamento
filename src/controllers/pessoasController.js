@@ -47,12 +47,12 @@ module.exports = class Pessoas {
     }
 
     async serverProcessing(req, res) {
-        const data = {};
-        data['pessoas'] = [];
+        var data = {};
         try {
-            data['pessoas'] = await PessoaModel.serverProcessing();
+            data = await PessoaModel.serverProcessing(req.query??req.body);
         } catch (error) {
             console.log(error);
         }
+        res.json(data);
     }
 }
