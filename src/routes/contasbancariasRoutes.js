@@ -1,4 +1,5 @@
 const ContasBancarias = require("../controllers/contasbancariasController");
+const validate = require("../validations/contasbancarias");
 
 const baseUri = function (uri) {
     if (uri) {
@@ -21,8 +22,6 @@ module.exports = function (application) {
     application.get(baseUri('update'), function (req, res) {
         contasBancariasController.showmodal(req, res);
     });
-    
-    application.post(baseUri('create'), function (req, res) {
-        contasBancariasController.create(req, res);
-    });
+
+    application.post(baseUri('create'), validate.create, contasBancariasController.create);
 }

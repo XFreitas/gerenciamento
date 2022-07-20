@@ -13,7 +13,7 @@
           <label for="tipoconta" class="form-label">Tipo da conta</label>
           <select class="form-select" id="tipoconta" name="tipoconta">
             <% tiposconta.forEach(tipoconta => { %>
-            <option <%= (contabancaria && (contabancaria.tipoconta == tipoconta.value)) ? 'selected' : '' %> value="<%= tipoconta.value %> "><%= tipoconta.text %></option>
+            <option <%= (contabancaria && (contabancaria.tipoconta == tipoconta.value)) ? 'selected' : '' %> value="<%= tipoconta.value %>"><%= tipoconta.text %></option>
             <% }) %>
           </select>
         </div>
