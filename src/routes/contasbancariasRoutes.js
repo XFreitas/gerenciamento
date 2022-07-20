@@ -15,6 +15,14 @@ module.exports = function (application) {
     });
 
     application.get(baseUri('create'), function (req, res) {
+        contasBancariasController.showmodal(req, res);
+    });
+
+    application.get(baseUri('update'), function (req, res) {
+        contasBancariasController.showmodal(req, res);
+    });
+    
+    application.post(baseUri('create'), function (req, res) {
         contasBancariasController.create(req, res);
     });
 }

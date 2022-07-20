@@ -17,14 +17,15 @@ module.exports = () => {
     }
   }
   Conta.init({
+    tipoconta: DataTypes.INTEGER,
     pessoa: DataTypes.INTEGER,
     numero: DataTypes.TEXT,
-    descricao: DataTypes.TEXT,
     codigo_banco: DataTypes.TEXT,
-    nome_banco: DataTypes.TEXT
+    nome_banco: DataTypes.TEXT,
+    descricao: DataTypes.TEXT,
   }, {
     sequelize,
-    modelName: 'Conta',
+    modelName: 'Contas',
   });
   return Conta;
 };

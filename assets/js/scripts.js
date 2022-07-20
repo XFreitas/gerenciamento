@@ -27,7 +27,6 @@ window.addEventListener('DOMContentLoaded', event => {
         this.dataset.value = '';
         this.maxLength = mask.length;
 
-
         this.addEventListener('input', event => {
             if (typeof event.data === 'string') {
                 event.target.dataset.value += event.data;
@@ -178,6 +177,7 @@ window.addEventListener('DOMContentLoaded', event => {
                                 if (Object.hasOwnProperty.call(options, 'hideModal')) {
                                     if (options.hideModal == true) {
                                         crudModal.hide();
+                                        window.location.reload();
                                     }
                                 }
 

@@ -1,11 +1,9 @@
 console.clear();
 const express = require('express');
-const bp = require('body-parser')
 const consign = require('consign');
 
 const app = express();
-app.use(bp.json());
-app.use(bp.urlencoded({ extended: true }));
+app.use(express.json());
 app.set('view engine', 'ejs');
 app.set('views', './src/views');
 app.use('/assets', express.static('assets'));

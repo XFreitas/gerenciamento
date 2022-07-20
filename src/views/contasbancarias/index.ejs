@@ -15,15 +15,21 @@
     <thead>
       <tr>
         <th style="width: 1%;" scope="col">#</th>
-        <th scope="col">Nome e sobrenome</th>
+        <th scope="col">Titular</th>
+        <th style="width: 1%;" scope="col">Tipo</th>
+        <th style="width: 1%;" scope="col">Banco</th>
+        <th style="width: 1%;" scope="col">Número</th>
         <th style="width: 1%;" scope="col">Handle</th>
       </tr>
     </thead>
     <tbody>
       <% contasbancarias.forEach(contabancaria => { %>
       <tr>
-        <th scope="row"><%= contabancaria.id %></th>
-        <td><%= contabancaria.numero %></td>
+        <th class="text-nowrap" scope="row"><%= contabancaria.id %></th>
+        <td class="text-nowrap"><%= contabancaria.pessoa.nome %></td>
+        <td class="text-nowrap"><%= contabancaria.tipoconta.nome %></td>
+        <td class="text-nowrap"><%= contabancaria.nome_banco %></td>
+        <td class="text-nowrap"><%= contabancaria.numero %></td>
         <td class="text-center">
           <a style="cursor: pointer;" onclick="showModal('<%= contabancaria.id %>');">
             <i class="fas fa-pencil"></i>
@@ -52,7 +58,11 @@
 <script type="text/javascript">
   const modalElement = document.getElementById('crud');
 
-  function showModal() {
-    modalElement.loadModal('/contasbancarias/create');
+  function showModal(id) {
+    if (id) {
+      modalElement.loadModal(`/contasbancarias/update?id=${id}`);
+    } else {
+      modalElement.loadModal('/contasbancarias/create');
+    }
   }
 </script>

@@ -12,6 +12,17 @@ module.exports = class ContasBancarias {
         data['contasbancarias'] = [];
         try {
             data['contasbancarias'] = await this.contaBancariaModel.findAll();
+
+            const tipocontas = require('../../models/tipocontas')();
+            const pessoa = require('../../models/pessoa')();
+
+
+            for (let index = 0; index < data['contasbancarias'].length; index++) {
+                const element = data['contasbancarias'][index];
+
+                data['contasbancarias'][index]['tipoconta'] = await tipocontas.findByPk(element.tipoconta);
+                data['contasbancarias'][index]['pessoa'] = await pessoa.findByPk(element.pessoa);
+            }
         } catch (error) {
             console.log(error);
         }
@@ -19,14 +30,16 @@ module.exports = class ContasBancarias {
         template(this.application, res, "contasbancarias/index", data);
     }
 
-    async create(req, res) {
+    async showmodal(req, res) {
         const data = {};
         try {
-            const Tipocontas = require('../../models/tipocontas');
-            const tipoconta = Tipocontas();
+            if (req.query) {
+                const id = req.query.id;
+                data['contabancaria'] = await this.contaBancariaModel.findByPk(id);
+            }
 
-            const Pessoa = require('../../models/pessoa');
-            const pessoa = Pessoa();
+            const tipoconta = require('../../models/tipocontas')();
+            const pessoa = require('../../models/pessoa')();
 
             data['tiposconta'] = [{ value: '', text: 'Selecione' }];
             data['pessoas'] = [{ value: '', text: 'Selecione' }];
@@ -50,7 +63,20 @@ module.exports = class ContasBancarias {
         } catch (error) {
             console.log(error);
         }
-
+console.log(data);
         res.render("contasbancarias/createUpdate", data);
+    }
+
+    async create(req, res) {
+        const data = {};
+
+        this.contaBancariaModel.create(req.body)
+            .then(contabancaria => {
+                console.log(contabancaria.id);
+                res.status(200).send({ id: contabancaria.id });
+            }).catch(error => {
+                res.status(500).send(error);
+                console.log(error);
+            });
     }
 }

@@ -1,55 +1,75 @@
 <div class="modal-dialog">
   <div class="modal-content">
     <div class="modal-header">
-      <h5 class="modal-title">Cadastrar conta bancaria</h5>
+      <h5 class="modal-title">
+        <button type="button" class="btn btn-primary btn-sm" onclick="document.getElementById('crud').loadModal()"><i class="fas fa-sync-alt"></i></button>
+        <%= contabancaria ? 'Alterar' : 'Cadastrar' %> conta bancaria
+      </h5>
       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
     </div>
-    <div class="modal-body">
-      <div class="mb-3">
-        <label for="tipoconta" class="form-label">Tipo da conta</label>
-        <select class="form-select" id="tipoconta">
-          <% tiposconta.forEach(tipoconta => { %>
-          <option value="<%= tipoconta.value %> "><%= tipoconta.text %> </option>
-          <% }) %>
-        </select>
+    <form action="/contasbancarias/create" method="<%= contabancaria ? 'put' : 'post' %>" id="formcontabancaria">
+      <div class="modal-body">
+        <div class="mb-3">
+          <label for="tipoconta" class="form-label">Tipo da conta</label>
+          <select class="form-select" id="tipoconta" name="tipoconta">
+            <% tiposconta.forEach(tipoconta => { %>
+            <option <%= (contabancaria && (contabancaria.tipoconta == tipoconta.value)) ? 'selected' : '' %> value="<%= tipoconta.value %> "><%= tipoconta.text %></option>
+            <% }) %>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label for="pessoa" class="form-label">Pessoa</label>
+          <select class="form-select" id="pessoa" name="pessoa">
+            <% pessoas.forEach(pessoa => { %>
+            <option <%= (contabancaria && (contabancaria.pessoa == pessoa.value)) ? 'selected' : '' %> value="<%= pessoa.value %>"><%= pessoa.text %> </option>
+            <% }) %>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label for="codigo_banco" class="form-label">Código do banco</label>
+          <input type="text" name="codigo_banco" id="codigo_banco" autocomplete="off" class="form-control" placeholder="Digite o código do banco...">
+        </div>
+        <div class="mb-3">
+          <label for="nome_banco" class="form-label">Nome banco</label>
+          <input type="text" name="nome_banco" id="nome_banco" autocomplete="off" class="form-control" oninput="this.value = this.value.toUpperCase();" placeholder="Digite o nome do banco...">
+        </div>
+        <div class="mb-3">
+          <label for="numero" class="form-label">Número</label>
+          <input type="text" name="numero" id="numero" autocomplete="off" class="form-control" placeholder="Digite a conta com o dígito...">
+        </div>
+        <div class="mb-3">
+          <label for="descricao" class="form-label">Descrição</label>
+          <textarea class="form-control" id="descricao" name="descricao" rows="3" oninput="this.value = this.value.toUpperCase();"></textarea>
+        </div>
       </div>
-      <div class="mb-3">
-        <label for="pessoa" class="form-label">Pessoa</label>
-        <select class="form-select" id="pessoa">
-          <% pessoas.forEach(pessoa => { %>
-          <option value="<%= pessoa.value %> "><%= pessoa.text %> </option>
-          <% }) %>
-        </select>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+        <button type="submit" class="btn btn-success">Salvar</button>
       </div>
-      <div class="mb-3">
-        <label for="numero" class="form-label">Número</label>
-        <input type="text" name="numero" id="numero" autocomplete="off" class="form-control" placeholder="Digite a conta com o dígito...">
-      </div>
-      <div class="mb-3">
-        <label for="descricao" class="form-label">Descrição</label>
-        <textarea class="form-control" id="descricao" name="descricao" rows="3"></textarea>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-      <button type="button" class="btn btn-primary">Understood</button>
-    </div>
+    </form>
   </div>
 </div>
 
 <script type="text/javascript">
   {
-    let modal = document.getElementById('crud');
+    const modal = document.getElementById('crud');
+    const form = modal.querySelector('form#formcontabancaria');
 
     function init() {
-      console.log('init');
-      let selector = document.querySelector('.modal #tipoconta');
+      const selector = document.querySelector('.modal #tipoconta');
       selector.focus();
 
-      let input = document.querySelector('.modal #numero');
-      input.mask('##########-#', {
+      const inputNumero = document.querySelector('.modal #numero');
+      inputNumero.mask('##########-#', {
         reverse: true
       });
+
+      const inputCodigoBanco = document.querySelector('.modal #codigo_banco');
+      inputCodigoBanco.mask('###', {
+        reverse: true
+      });
+
+      form.submitModal();
     }
 
     setTimeout(() => init(), 250);
