@@ -1,10 +1,12 @@
 const { template } = require("../helpers");
-const ContaBancariaModel = require("../../models/conta");
+const ContaModel = require("../models/conta");
+const PessoaModel = require("../models/pessoa");
+const TipocontaModel = require("../models/tipocontas");
 
 module.exports = class ContasBancarias {
     constructor(application) {
         this.application = application;
-        this.contaBancariaModel = ContaBancariaModel();
+        this.contaBancariaModel = ContaModel;
     }
 
     async index(req, res) {
@@ -13,15 +15,11 @@ module.exports = class ContasBancarias {
         try {
             data['contasbancarias'] = await this.contaBancariaModel.findAll();
 
-            const tipocontas = require('../../models/tipocontas')();
-            const pessoa = require('../../models/pessoa')();
-
-
             for (let index = 0; index < data['contasbancarias'].length; index++) {
                 const element = data['contasbancarias'][index];
 
-                data['contasbancarias'][index]['tipoconta'] = await tipocontas.findByPk(element.tipoconta);
-                data['contasbancarias'][index]['pessoa'] = await pessoa.findByPk(element.pessoa);
+                data['contasbancarias'][index]['tipoconta'] = await TipocontaModel.findByPk(element.tipoconta);
+                data['contasbancarias'][index]['pessoa'] = await PessoaModel.findByPk(element.pessoa);
             }
         } catch (error) {
             console.log(error);
@@ -38,14 +36,11 @@ module.exports = class ContasBancarias {
                 data['contabancaria'] = await this.contaBancariaModel.findByPk(id);
             }
 
-            const tipoconta = require('../../models/tipocontas')();
-            const pessoa = require('../../models/pessoa')();
-
             data['tiposconta'] = [{ value: '', text: 'Selecione' }];
             data['pessoas'] = [{ value: '', text: 'Selecione' }];
 
-            let tipocontas = await tipoconta.findAll();
-            let pessoas = await pessoa.findAll();
+            let tipocontas = await TipocontaModel.findAll();
+            let pessoas = await PessoaModel.findAll();
 
             tipocontas.forEach(tipoconta => {
                 data['tiposconta'].push({
@@ -63,7 +58,7 @@ module.exports = class ContasBancarias {
         } catch (error) {
             console.log(error);
         }
-console.log(data);
+        console.log(data);
         res.render("contasbancarias/createUpdate", data);
     }
 

@@ -1,9 +1,9 @@
 const { template } = require("../helpers")
-const PessoaModel = require("../../models/pessoa");
+const PessoaModel = require("../models/pessoa");
 module.exports = class Pessoas {
     constructor(application) {
         this.application = application;
-        this.pessoaModel = PessoaModel();
+        this.pessoaModel = new PessoaModel();
     }
 
     async index(req, res) {
