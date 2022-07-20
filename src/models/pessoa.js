@@ -1,11 +1,13 @@
 'use strict';
 
-const sequelize = require('../configs/db');
+// const sequelize = require('../configs/db');
 const {
   DataTypes, Model
 } = require('sequelize');
 
-class Pessoa extends Model {
+const { MainModel, sequelize } = require('./mainModel');
+
+class Pessoa extends MainModel {
   /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.

@@ -25,4 +25,8 @@ module.exports = function (application) {
     application.put(baseUri('inserireditar'), function (req, res) {
         pessoaController.update(req, res);
     });
+
+    application.get(baseUri('serverprocessing'), function (req, res) {
+        pessoaController.serverProcessing(req, res);
+    });
 }

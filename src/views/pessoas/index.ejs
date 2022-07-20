@@ -11,7 +11,7 @@
   </div>
 </div>
 <div class="card mb-4">
-  <table class="table">
+  <table class="table" id="tablePessoas">
     <thead>
       <tr>
         <th style="width: 1%;" scope="col">#</th>
@@ -20,17 +20,7 @@
       </tr>
     </thead>
     <tbody>
-      <% pessoas.forEach(pessoa => { %>
-      <tr>
-        <th scope="row"><%= pessoa.id %></th>
-        <td><%= pessoa.nome %></td>
-        <td class="text-center">
-          <a style="cursor: pointer;" onclick="showModal('<%= pessoa.id %>');">
-            <i class="fas fa-pencil"></i>
-          </a>
-        </td>
-      </tr>
-      <% }) %>
+      
     </tbody>
   </table>
 </div>
@@ -50,6 +40,25 @@
 </div>
 
 <script type="text/javascript">
+
+  import('/node_modules/@jstable/jstable/dist/jstable.min.js')
+    .then(() => {
+      const tableElement = document.querySelector(`#tablePessoas`);
+
+      const headElement = document.querySelector(`head`),
+        createdLinkElement = document.createElement('link');
+
+      createdLinkElement.rel = 'stylesheet';
+      createdLinkElement.href = '/node_modules/@jstable/jstable/dist/jstable.css';
+
+      headElement.appendChild(createdLinkElement);
+
+      const table = new JSTable(tableElement, {
+        serverSide: true,
+        ajax: `/pessoas/serverprocessing`,
+      });
+    });
+
   function showModal(id) {
     const modalElement = document.getElementById('crud');
 

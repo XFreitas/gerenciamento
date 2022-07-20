@@ -3,19 +3,10 @@ const PessoaModel = require("../models/pessoa");
 module.exports = class Pessoas {
     constructor(application) {
         this.application = application;
-        this.pessoaModel = new PessoaModel();
     }
 
-    async index(req, res) {
-        const data = {};
-        data['pessoas'] = [];
-        try {
-            data['pessoas'] = await this.pessoaModel.findAll();
-        } catch (error) {
-            console.log(error);
-        }
-
-        template(this.application, res, "pessoas/index", data);
+    index(req, res) {
+        template(this.application, res, "pessoas/index", {});
     }
 
     async loadmodal(req, res) {
@@ -24,7 +15,7 @@ module.exports = class Pessoas {
         try {
             if (req.query) {
                 const id = req.query.id;
-                data['pessoa'] = await this.pessoaModel.findByPk(id);
+                data['pessoa'] = await PessoaModel.findByPk(id);
             }
             res.render("pessoas/createUpdate", data);
         } catch (error) {
@@ -34,7 +25,7 @@ module.exports = class Pessoas {
     }
 
     create(req, res) {
-        this.pessoaModel.create({ nome: req.body.nome.toUpperCase() })
+        PessoaModel.create({ nome: req.body.nome.toUpperCase() })
             .then(pessoa => {
                 console.log(pessoa.id);
                 res.status(200).send({ id: pessoa.id });
@@ -45,7 +36,7 @@ module.exports = class Pessoas {
     }
 
     update(req, res) {
-        this.pessoaModel.update({ nome: req.body.nome.toUpperCase() }, { where: { id: req.body.id } })
+        PessoaModel.update({ nome: req.body.nome.toUpperCase() }, { where: { id: req.body.id } })
             .then(pessoa => {
                 console.log(pessoa.id);
                 res.status(200).send({ id: pessoa.id });
@@ -53,5 +44,15 @@ module.exports = class Pessoas {
                 res.status(500).send(error);
                 console.log(error);
             });
+    }
+
+    async serverProcessing(req, res) {
+        const data = {};
+        data['pessoas'] = [];
+        try {
+            data['pessoas'] = await PessoaModel.serverProcessing();
+        } catch (error) {
+            console.log(error);
+        }
     }
 }
