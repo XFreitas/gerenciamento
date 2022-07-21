@@ -46,90 +46,28 @@
 </div>
 
 <script type="text/javascript">
+  window.addEventListener('load', function () {
+    const tableElement = document.querySelector(`#tablePessoas`);
 
-  import('/node_modules/@jstable/jstable/dist/jstable.min.js')
-    .then(() => {
-      const tableElement = document.querySelector(`#tablePessoas`);
-
-      const headElement = document.querySelector(`head`),
-        createdLinkElement = document.createElement('link');
-
-      createdLinkElement.rel = 'stylesheet';
-      createdLinkElement.href = '/node_modules/@jstable/jstable/dist/jstable.css';
-
-      headElement.appendChild(createdLinkElement);
-
-      const ajaxParams = {};
-
-      const table = new JSTable(tableElement, {
-        searchable: false,
-        addQueryParams: false,
-        ajaxParams,
-        serverSide: true,
-        ajax: `/pessoas/serverprocessing`,
-        columns: [
-          {
-            select: 0,
-            sortable: true,
-            sort: "desc",
-            render: (cell, idx) => `<div class="text-center">${cell.textContent}</div>`
-          },
-          {
-            select: 2,
-            sortable: false,
-            searchable: false,
-            dataset: 'text-center',
-            render: (cell, idx) => `<div class="text-center"><a style="cursor: pointer" onclick="showModal(${cell.textContent});"><i class="fas fa-pencil"></i></a></div>`
-          }
-        ],
-        labels: {
-          placeholder: "Procure...",
-          perPage: "Exibindo {select} registros por página",
-          noRows: "Nenhum registro encontrado",
-          info: "Exibindo {start} até {end} de {rows} registro(s)",
-          loading: "Processando...",
-          infoFiltered: "Exibindo {start} até {end} de {rows} registro(s) (filtrado de {rowsTotal} registros)"
+    tableElement.serverProcessing({
+      ajax: `/pessoas/serverprocessing`,
+      columns: [
+        {
+          select: 0,
+          sortable: true,
+          sort: "desc",
+          render: (cell, idx) => `<div class="text-center">${cell.textContent}</div>`
+        },
+        {
+          select: 2,
+          sortable: false,
+          searchable: false,
+          dataset: 'text-center',
+          render: (cell, idx) => `<div class="text-center"><a style="cursor: pointer" onclick="showModal(${cell.textContent});"><i class="fas fa-pencil"></i></a></div>`
         }
-      });
-
-      const divDTSearch = document.createElement('div');
-      divDTSearch.className = 'dt-search';
-
-      const inputDTSearch = document.createElement('input');
-      inputDTSearch.className = 'dt-input';
-      inputDTSearch.placeholder = 'Procure...';
-      inputDTSearch.type = 'text';
-      inputDTSearch.onkeyup = e => {
-        e.preventDefault();
-        if (e.keyCode == 13) {
-          table.search(inputDTSearch.value);
-        }
-      };
-
-      divDTSearch.appendChild(inputDTSearch);
-      document.querySelector('.dt-wrapper .dt-top').appendChild(divDTSearch);
-
-      tableElement.querySelectorAll('tfoot tr > *').forEach((element, i) => {
-        if (element.tagName == 'TH') {
-          const index = i + 1;
-          const placeholder = tableElement.querySelector(`thead tr > *:nth-child(${index})`).textContent;
-          const input = document.createElement('input');
-          input.className = 'dt-input';
-          input.placeholder = placeholder;
-          input.type = 'text';
-          input.onkeyup = e => {
-            e.preventDefault();
-            if (e.keyCode == 13) {
-              
-              ajaxParams[i] = input.value;
-              table.update();
-            }
-          };
-          input.style = 'width: 100%';
-          element.appendChild(input);
-        }
-      });
+      ]
     });
+  });
 
   function showModal(id) {
     const modalElement = document.getElementById('crud');

@@ -206,4 +206,81 @@ window.addEventListener('DOMContentLoaded', event => {
             });
         }
     }
+
+    Element.prototype.serverProcessing = function (options = {}) {
+        const tableElement = this;
+
+        import('/node_modules/@jstable/jstable/dist/jstable.min.js')
+            .then(() => {
+                const headElement = document.querySelector(`head`),
+                    createdLinkElement = document.createElement('link');
+
+                createdLinkElement.rel = 'stylesheet';
+                createdLinkElement.href = '/node_modules/@jstable/jstable/dist/jstable.css';
+
+                headElement.appendChild(createdLinkElement);
+
+                const ajaxParams = {};
+
+                const jsTableOptions = {
+                    searchable: false,
+                    addQueryParams: false,
+                    ajaxParams,
+                    serverSide: true,
+                    ajax: options.ajax,
+                    columns: options.columns,
+                    labels: {
+                        placeholder: "Procure...",
+                        perPage: "Exibindo {select} registros por página",
+                        noRows: "Nenhum registro encontrado",
+                        info: "Exibindo {start} até {end} de {rows} registro(s)",
+                        loading: "Processando...",
+                        infoFiltered: "Exibindo {start} até {end} de {rows} registro(s) (filtrado de {rowsTotal} registros)"
+                    }
+                };
+                if (options.hasOwnProperty('columns')) {
+                    jsTableOptions.columns = options.columns;
+                }
+
+                const table = new JSTable(tableElement, jsTableOptions);
+
+                const divDTSearch = document.createElement('div');
+                divDTSearch.className = 'dt-search';
+
+                const colsSearchFunction = e => {
+                    e.preventDefault();
+                    if (e.keyCode == 13) {
+                        tableElement.querySelectorAll(`tfoot tr input`).forEach((input, index) => {
+                            ajaxParams[`columnsSearch${index}`] = "";
+                            if (input.value)
+                                ajaxParams[`columnsSearch${index}`] = input.value;
+                        });
+                        table.search(inputDTSearch.value);
+                    }
+                };
+
+                const inputDTSearch = document.createElement('input');
+                inputDTSearch.className = 'dt-input';
+                inputDTSearch.placeholder = 'Procure...';
+                inputDTSearch.type = 'text';
+                inputDTSearch.onkeyup = colsSearchFunction;
+
+                divDTSearch.appendChild(inputDTSearch);
+                document.querySelector('.dt-wrapper .dt-top').appendChild(divDTSearch);
+
+                tableElement.querySelectorAll('tfoot tr > *').forEach((element, i) => {
+                    if (element.tagName == 'TH') {
+                        const index = i + 1;
+                        const placeholder = tableElement.querySelector(`thead tr > *:nth-child(${index})`).textContent;
+                        const input = document.createElement('input');
+                        input.className = 'dt-input';
+                        input.placeholder = placeholder;
+                        input.type = 'text';
+                        input.onkeyup = colsSearchFunction;
+                        input.style = 'width: 100%';
+                        element.appendChild(input);
+                    }
+                });
+            });
+    }
 });

@@ -5,7 +5,31 @@ const {
 
 class MainModel extends Model {
     static serverProcessing = async (params = {}) => {
-        const where = (params.searchQuery.length > 0 && params.searchQuery != 'null' ? `\n        AND (${params.colsWhere.map(col => `${col} LIKE :searchQuery`).join(' OR ')})` : '');
+        let where = ``;
+        const auxSearchQuery = {};
+        if ((params.searchQuery.length > 0 && params.searchQuery != 'null')) {
+            where += `\n        AND (${params.colsWhere.map(col => (params.searchQuery.split(';').map((v, i) => `${col} LIKE :searchQuery${i}`).join(' OR '))).join(' OR ')})`
+            params.searchQuery.split(';').map((v, i) => {
+                auxSearchQuery[`searchQuery${i}`] = `%${v}%`;
+            });
+        };
+
+        const colsSearch = {}, auxColumnWhere = [];
+        params.colsWhere.forEach((col, index) => {
+            if (params[`columnsSearch${index}`]) {
+                let searchC = [];
+                params[`columnsSearch${index}`].split(';').map((v, i) => {
+                    colsSearch[`columnsSearch${index}${i}`] = `%${v}%`;
+                    searchC.push(`${col} LIKE :columnsSearch${index}${i}`);
+                });
+                auxColumnWhere.push(`(${searchC.join(' OR ')})`);
+            }
+        });
+        console.log({ colsSearch, auxColumnWhere });
+        if (auxColumnWhere.length > 0) {
+            where += `\n        AND ${auxColumnWhere.map(col => `${col}`).join(' AND ')}`;
+        }
+
         const data = await sequelize.query(`SELECT ('[' || GROUP_CONCAT(row, ',') || ']') AS data` +
             `\nFROM (` +
             `\n    SELECT GROUP_CONCAT('['` +
@@ -26,19 +50,19 @@ class MainModel extends Model {
             `\n) AS foo`, {
             type: QueryTypes.SELECT,
             replacements: {
-                searchQuery: `%${params.searchQuery}%`,
+                ...colsSearch,
+                ...auxSearchQuery
             }
         }),
             recordsTotal = await sequelize.query(`SELECT COUNT(${params.priorityGroupColumn}) AS count ${params.from_join}`, {
                 type: QueryTypes.SELECT,
-                replacements: {
-                    searchQuery: `%${params.searchQuery}%`,
-                }
+                replacements: {}
             }),
             recordsFiltered = await sequelize.query(`SELECT COUNT(${params.priorityGroupColumn}) AS count ${params.from_join} WHERE 1=1${where}`, {
                 type: QueryTypes.SELECT,
                 replacements: {
-                    searchQuery: `%${params.searchQuery}%`,
+                    ...colsSearch,
+                    ...auxSearchQuery
                 }
             });
 

@@ -49,7 +49,7 @@ module.exports = class Pessoas {
     async serverProcessing(req, res) {
         var data = {};
         try {
-            data = await PessoaModel.serverProcessing(req.query??req.body);
+            data = await PessoaModel.serverProcessing(req.query ?? req.body);
         } catch (error) {
             console.log(error);
         }
