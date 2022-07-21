@@ -1,18 +1,18 @@
 <div class="modal-dialog">
   <div class="modal-content">
-    <form action="/pessoas/inserireditar" method="<%= pessoa ? 'put' : 'post' %>" id="formpessoa">
-      <input type="hidden" name="id" value="<%= pessoa ? pessoa.id : '' %>">
+    <form action="/categorias/createupdate" method="<%= categoria ? 'put' : 'post' %>" id="formcategoria">
+      <input type="hidden" name="id" value="<%= categoria ? categoria.id : '' %>">
       <div class="modal-header">
         <h5 class="modal-title">
           <button type="button" class="btn btn-primary btn-sm" onclick="document.getElementById('crud').loadModal()"><i class="fas fa-sync-alt"></i></button>
-          <%= pessoa ? 'Atualizar' : 'Cadastrar' %> pessoa
+          <%= categoria ? 'Atualizar' : 'Cadastrar' %> categoria
         </h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <div class="mb-3">
           <label for="nome" class="form-label">Nome</label>
-          <input type="text" class="form-control text-uppercase" id="nome" value="<%= pessoa ? pessoa.nome : '' %>" name="nome" placeholder="Digite um nome aqui..." autocomplete="off">
+          <input type="text" class="form-control text-uppercase" id="nome" value="<%= categoria ? categoria.nome : '' %>" name="nome" placeholder="Digite um nome aqui..." autocomplete="off">
         </div>
       </div>
       <div class="modal-footer">
@@ -32,7 +32,7 @@
 
       input.focus();
 
-      const form = document.querySelector(".modal form#formpessoa");
+      const form = document.querySelector(".modal form#formcategoria");
       form.submitModal({
         success: (response) => {
           console.log(response);
