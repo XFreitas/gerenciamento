@@ -1,0 +1,47 @@
+<div class="modal-dialog">
+  <div class="modal-content">
+    <form action="/pessoas/inserireditar" method="<%= pessoa ? 'put' : 'post' %>" id="formpessoa">
+      <input type="hidden" name="id" value="<%= pessoa ? pessoa.id : '' %>">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          <button type="button" class="btn btn-primary btn-sm" onclick="document.getElementById('crud').loadModal()"><i class="fas fa-sync-alt"></i></button>
+          <%= pessoa ? 'Atualizar' : 'Cadastrar' %> pessoa
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label for="nome" class="form-label">Nome</label>
+          <input type="text" class="form-control text-uppercase" id="nome" value="<%= pessoa ? pessoa.nome : '' %>" name="nome" placeholder="Digite um nome aqui..." autocomplete="off">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+        <button type="submit" class="btn btn-success">Salvar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script type="text/javascript">
+  {
+    function init() {
+      console.clear();
+
+      let input = document.getElementById('nome');
+
+      input.focus();
+
+      const form = document.querySelector(".modal form#formpessoa");
+      form.submitModal({
+        success: (response) => {
+          console.log(response);
+          // window.location.reload();
+          tableElement.JSTable.update();
+        }
+      });
+    }
+
+    setTimeout(() => init(), 250);
+  }
+</script>

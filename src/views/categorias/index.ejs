@@ -1,0 +1,70 @@
+<div class="row">
+  <div class="col-8">
+    <h1 class="mt-4">Categoria</h1>
+    <ol class="breadcrumb mb-4">
+      <li class="breadcrumb-item"><a href="/">Início</a></li>
+      <li class="breadcrumb-item active">Categoria</li>
+    </ol>
+  </div>
+  <div class="col-4 my-auto d-flex flex-row-reverse">
+    <button type="button" class="btn btn-primary" onclick="showModal();">Nova categoria</button>
+  </div>
+</div>
+<div class="card mb-4">
+  <table class="table" id="tableCategorias">
+    <thead>
+      <tr>
+        <th style="width: 10%;" scope="col" class="text-center">#</th>
+        <th scope="col">Categoria</th>
+        <th scope="col">Categoria Pai</th>
+        <th style="width: 1%;" scope="col">Nível</th>
+        <th style="width: 1%;" scope="col" class="text-center">Handle</th>
+      </tr>
+    </thead>
+    <tbody>
+    </tbody>
+    <tfoot>
+      <tr>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <td></td>
+      </tr>
+    </tfoot>
+  </table>
+</div>
+
+<div class="modal fade" id="crud" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"></h5>
+      </div>
+      <div class="modal-body mx-auto">
+        <div class="spinner-border" role="status"></div>
+      </div>
+      <div class="modal-footer"></div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  const tableElement = document.querySelector(`#tableCategorias`);
+
+  window.addEventListener('load', function () {
+    tableElement.serverProcessing({
+      ajax: `/categorias/serverprocessing`
+    });
+  });
+
+  function showModal(id) {
+    const modalElement = document.getElementById('crud');
+
+    if (id) {
+      modalElement.loadModal(`/pessoas/inserireditar?id=${id}`);
+    } else {
+      modalElement.loadModal(`/pessoas/inserireditar`);
+    }
+  }
+</script>

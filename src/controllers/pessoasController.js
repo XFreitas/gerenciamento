@@ -25,7 +25,7 @@ module.exports = class Pessoas {
     }
 
     create(req, res) {
-        PessoaModel.create({ nome: req.body.nome.toUpperCase() })
+        PessoaModel.create({ nome: req.body.nome })
             .then(pessoa => {
                 console.log(pessoa.id);
                 res.status(200).send({ id: pessoa.id });
@@ -36,7 +36,7 @@ module.exports = class Pessoas {
     }
 
     update(req, res) {
-        PessoaModel.update({ nome: req.body.nome.toUpperCase() }, { where: { id: req.body.id } })
+        PessoaModel.update({ nome: req.body.nome }, { where: { id: req.body.id } })
             .then(pessoa => {
                 console.log(pessoa.id);
                 res.status(200).send({ id: pessoa.id });

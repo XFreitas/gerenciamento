@@ -19,11 +19,11 @@ module.exports = function (application) {
         pessoaController.loadmodal(req, res);
     });
 
-    application.post(baseUri('inserireditar'), validate.create, function (req, res) {
+    application.post(baseUri('inserireditar'), validate, function (req, res) {
         pessoaController.create(req, res);
     });
 
-    application.put(baseUri('inserireditar'), validate.update, function (req, res) {
+    application.put(baseUri('inserireditar'), validate, function (req, res) {
         pessoaController.update(req, res);
     });
 
