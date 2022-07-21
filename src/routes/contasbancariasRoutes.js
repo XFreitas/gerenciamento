@@ -24,4 +24,8 @@ module.exports = function (application) {
     });
 
     application.post(baseUri('create'), validate.create, contasBancariasController.create);
+
+    application.get(baseUri('serverprocessing'), function (req, res) {
+        contasBancariasController.serverProcessing(req, res);
+    });
 }

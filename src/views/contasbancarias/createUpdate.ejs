@@ -11,19 +11,11 @@
       <div class="modal-body">
         <div class="mb-3">
           <label for="tipoconta" class="form-label">Tipo da conta</label>
-          <select class="form-select" id="tipoconta" name="tipoconta">
-            <% tiposconta.forEach(tipoconta => { %>
-            <option <%= (contabancaria && (contabancaria.tipoconta == tipoconta.value)) ? 'selected' : '' %> value="<%= tipoconta.value %>"><%= tipoconta.text %></option>
-            <% }) %>
-          </select>
+          <%- formHelpers.formDropDown('tipoconta', tiposconta, contabancaria?.tipoconta, `class="form-select" id="tipoconta"`) %>
         </div>
         <div class="mb-3">
           <label for="pessoa" class="form-label">Pessoa</label>
-          <select class="form-select" id="pessoa" name="pessoa">
-            <% pessoas.forEach(pessoa => { %>
-            <option <%= (contabancaria && (contabancaria.pessoa == pessoa.value)) ? 'selected' : '' %> value="<%= pessoa.value %>"><%= pessoa.text %> </option>
-            <% }) %>
-          </select>
+          <%- formHelpers.formDropDown('pessoa', pessoas, contabancaria?.pessoa, `class="form-select" id="pessoa"`) %>
         </div>
         <div class="mb-3">
           <label for="codigo_banco" class="form-label">Código do banco</label>
@@ -69,7 +61,13 @@
         reverse: true
       });
 
-      form.submitModal();
+      form.submitModal({
+        success: function(response) {
+          console.log(response);
+          // window.location.reload();
+          tableElement.JSTable.update();
+        }
+      });
     }
 
     setTimeout(() => init(), 250);

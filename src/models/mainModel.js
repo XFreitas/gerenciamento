@@ -43,7 +43,7 @@ class MainModel extends Model {
             `\n        LIMIT ${params.length}` +
             `\n        OFFSET ${params.start}` +
             `\n    ) AS foo` +
-            `\n    GROUP BY ${params.priorityGroupColumn}` +
+            `\n    GROUP BY ${params.priorityGroupColumn.split('.').slice(-1)}` +
             (typeof params.colsOrder[params.sortColumn] != "undefined"
                 ? `\n    ORDER BY ${params.colsOrder[params.sortColumn]}${["asc", "desc"].indexOf(params.sortDirection) > -1 ? ` ${params.sortDirection}` : ''}`
                 : '') +

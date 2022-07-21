@@ -63,19 +63,23 @@ module.exports = class ContasBancarias {
     }
 
     async create(req, res) {
-        const data = {};
+        ContaModel.create(req.body)
+            .then(contabancaria => {
+                console.log(contabancaria.id);
+                res.status(200).send({ id: contabancaria.id });
+            }).catch(error => {
+                res.status(500).send(error);
+                console.log(error);
+            });
+    }
 
-        // this.contaBancariaModel.create(req.body)
-        //     .then(contabancaria => {
-        //         console.log(contabancaria.id);
-        //         res.status(200).send({ id: contabancaria.id });
-        //     }).catch(error => {
-        //         res.status(500).send(error);
-        //         console.log(error);
-        //     });
-
-        console.log(req.body);
-
-        res.status(500).send('req.body');
+    async serverProcessing(req, res) {
+        var data = {};
+        try {
+            data = await ContaModel.serverProcessing(req.query ?? req.body);
+        } catch (error) {
+            console.log(error);
+        }
+        res.json(data);
     }
 }

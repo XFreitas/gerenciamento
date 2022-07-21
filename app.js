@@ -21,3 +21,5 @@ app.listen(4000, () => {
 app.get('*', function (req, res) {
     res.status(404).render('errors/404');
 });
+
+app.locals.formHelpers = require('./src/helpers/formHelpers');

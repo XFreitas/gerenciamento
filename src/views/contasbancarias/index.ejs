@@ -11,33 +11,28 @@
   </div>
 </div>
 <div class="card mb-4">
-  <table class="table">
+  <table class="table" id="tableContasBancarias">
     <thead>
       <tr>
-        <th style="width: 1%;" scope="col">#</th>
+        <th style="width: 10%;" scope="col">#</th>
         <th scope="col">Titular</th>
-        <th style="width: 1%;" scope="col">Tipo</th>
-        <th style="width: 1%;" scope="col">Banco</th>
-        <th style="width: 1%;" scope="col">Número</th>
+        <th scope="col">Tipo</th>
+        <th scope="col">Banco</th>
+        <th scope="col">Número</th>
         <th style="width: 1%;" scope="col">Handle</th>
       </tr>
     </thead>
-    <tbody>
-      <% contasbancarias.forEach(contabancaria => { %>
+    <tbody></tbody>
+    <tfoot>
       <tr>
-        <th class="text-nowrap" scope="row"><%= contabancaria.id %></th>
-        <td class="text-nowrap"><%= contabancaria.pessoa.nome %></td>
-        <td class="text-nowrap"><%= contabancaria.tipoconta.nome %></td>
-        <td class="text-nowrap"><%= `${contabancaria.codigo_banco} - ${contabancaria.nome_banco}` %></td>
-        <td class="text-nowrap"><%= contabancaria.numero %></td>
-        <td class="text-center">
-          <a style="cursor: pointer;" onclick="showModal('<%= contabancaria.id %>');">
-            <i class="fas fa-pencil"></i>
-          </a>
-        </td>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <td></td>
       </tr>
-      <% }) %>
-    </tbody>
+    </tfoot>
   </table>
 </div>
 
@@ -57,6 +52,28 @@
 
 <script type="text/javascript">
   const modalElement = document.getElementById('crud');
+
+  const tableElement = document.querySelector('#tableContasBancarias');
+
+  window.addEventListener('load', function() {
+    tableElement.serverProcessing({
+      ajax: `/contasbancarias/serverprocessing`,
+      columns: [{
+          select: [0],
+          sortable: true,
+          sort: "desc",
+          render: (cell, idx) => `<div class="text-center">${cell.textContent}</div>`
+        },
+        {
+          select: 5,
+          sortable: false,
+          searchable: false,
+          dataset: 'text-center',
+          render: (cell, idx) => `<div class="text-center"><a style="cursor: pointer" onclick="showModal(${cell.textContent});"><i class="fas fa-pencil"></i></a></div>`
+        }
+      ]
+    });
+  });
 
   function showModal(id) {
     if (id) {
