@@ -156,9 +156,9 @@ window.addEventListener('DOMContentLoaded', event => {
                 const data = form.serializeObject();
                 const method = form.getAttribute("method");
 
-                form.querySelectorAll('*').forEach(input => {
-                    input.disabled = true;
-                });
+                // form.querySelectorAll('[name]').forEach(input => {
+                //     input.disabled = true;
+                // });
 
                 axios({
                     method,
@@ -188,13 +188,18 @@ window.addEventListener('DOMContentLoaded', event => {
                         }
                     })
                     .catch(function (error) {
-                        console.log(error);
+                        const response = error.response;
+
+                        if (response.status === 422) {
+                            const message = '<p>' + response.data.errors.map(e => e.msg).join('</p><p>') + '</p>';
+                            form.alertModal(message, response.status);
+                        }
                     })
                     .finally(function () {
                         buttonSubmit.disabled = false;
                         buttonSubmit.innerHTML = buttonSubmitHTML;
 
-                        form.querySelectorAll('*').forEach(input => {
+                        form.querySelectorAll('[name]').forEach(input => {
                             input.disabled = false;
                         });
                     });
