@@ -1,4 +1,5 @@
 const Pessoas = require("../controllers/pessoasController");
+const validate = require("../validations/pessoas");
 
 const baseUri = function (uri) {
     if (uri) {
@@ -18,11 +19,11 @@ module.exports = function (application) {
         pessoaController.loadmodal(req, res);
     });
 
-    application.post(baseUri('inserireditar'), function (req, res) {
+    application.post(baseUri('inserireditar'), validate.create, function (req, res) {
         pessoaController.create(req, res);
     });
 
-    application.put(baseUri('inserireditar'), function (req, res) {
+    application.put(baseUri('inserireditar'), validate.update, function (req, res) {
         pessoaController.update(req, res);
     });
 

@@ -234,12 +234,11 @@ window.addEventListener('DOMContentLoaded', event => {
                 const ajaxParams = {};
 
                 const jsTableOptions = {
+                    ...options,
                     searchable: false,
                     addQueryParams: false,
                     ajaxParams,
                     serverSide: true,
-                    ajax: options.ajax,
-                    columns: options.columns,
                     labels: {
                         placeholder: "Procure...",
                         perPage: "Exibindo {select} registros por página",
@@ -249,9 +248,6 @@ window.addEventListener('DOMContentLoaded', event => {
                         infoFiltered: "Exibindo {start} até {end} de {rows} registro(s) (filtrado de {rowsTotal} registros)"
                     }
                 };
-                if (options.hasOwnProperty('columns')) {
-                    jsTableOptions.columns = options.columns;
-                }
 
                 const table = new JSTable(tableElement, jsTableOptions);
 
