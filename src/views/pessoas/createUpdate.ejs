@@ -36,7 +36,8 @@
       form.submitModal({
         success: (response) => {
           console.log(response);
-          window.location.reload();
+          // window.location.reload();
+          tableElement.JSTable.update();
         }
       });
     }

@@ -46,9 +46,9 @@
 </div>
 
 <script type="text/javascript">
-  window.addEventListener('load', function () {
-    const tableElement = document.querySelector(`#tablePessoas`);
+  const tableElement = document.querySelector(`#tablePessoas`);
 
+  window.addEventListener('load', function () {
     tableElement.serverProcessing({
       ajax: `/pessoas/serverprocessing`,
       columns: [

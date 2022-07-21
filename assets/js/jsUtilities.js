@@ -27,14 +27,14 @@ window.addEventListener('DOMContentLoaded', event => {
         this.dataset.value = '';
         this.maxLength = mask.length;
 
+        let formatter = new StringMask(mask, options);
         this.addEventListener('input', event => {
             if (typeof event.data === 'string') {
                 event.target.dataset.value += event.data;
             } else {
-                event.target.dataset.value = event.target.dataset.value.slice(0, -1);
+                event.target.dataset.value = event.target.value.replace(/[^0-9a-zA-z]/g, '');
             }
 
-            let formatter = new StringMask(mask, options);
             let result = formatter.apply(event.target.dataset.value);
 
             event.target.value = result;
@@ -118,10 +118,19 @@ window.addEventListener('DOMContentLoaded', event => {
                 const alertType = httpCode >= 400 ? 'danger' : 'success';
                 const alertIcon = httpCode >= 400 ? 'exclamation-triangle' : 'check-circle';
 
-                modalBody.innerHTML = `<div class="alert alert-${alertType}" role="alert">` +
-                    `<h4 class="alert-heading"><i class="fas fa-${alertIcon} fa-fw"></i> ${title}</h4>` +
+                const dismissClass = httpCode >= 400 ? 'alert-dismissible fade show' : '';
+                const buttonDismiss = httpCode >= 400 ? '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>' : '';
+
+                const alertHtml = `<div class="alert alert-${alertType} ${dismissClass}" role="alert">` +
+                    `<h4 class="alert-heading"><i class="fas fa-${alertIcon} fa-fw"></i> ${title}${buttonDismiss}</h4>` +
                     `<p>${message}</p>` +
-                    `</div>${modalBody.innerHTML}`;
+                    `</div>`;
+
+                const div = document.createElement('div');
+
+                div.innerHTML = alertHtml;
+
+                modalBody.prepend(div);
             }
             else {
                 const alert = modalBody.querySelector('.alert');
@@ -132,7 +141,11 @@ window.addEventListener('DOMContentLoaded', event => {
         }
     }
 
-    Element.prototype.submitModal = function (options = { hideModal: true }) {
+    Element.prototype.submitModal = function (options = {}) {
+        if (typeof options.hideModal === 'undefined') {
+            options.hideModal = true;
+        }
+
         if (this.tagName.toLowerCase() == 'form') {
             const form = this;
 
@@ -152,13 +165,12 @@ window.addEventListener('DOMContentLoaded', event => {
 
                 buttonSubmit.innerHTML = '<i class="fas fa-pulse fa-spinner"></i> Salvando...';
 
-
                 const data = form.serializeObject();
                 const method = form.getAttribute("method");
 
-                // form.querySelectorAll('[name]').forEach(input => {
-                //     input.disabled = true;
-                // });
+                form.querySelectorAll('[name]').forEach(input => {
+                    input.disabled = true;
+                });
 
                 axios({
                     method,
@@ -177,7 +189,6 @@ window.addEventListener('DOMContentLoaded', event => {
                                 if (Element.hasOwnProperty.call(options, 'hideModal')) {
                                     if (options.hideModal == true) {
                                         crudModal.hide();
-                                        window.location.reload();
                                     }
                                 }
 
@@ -281,6 +292,8 @@ window.addEventListener('DOMContentLoaded', event => {
                         element.appendChild(input);
                     }
                 });
+
+                tableElement.JSTable = table;
             });
     }
 });
