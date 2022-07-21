@@ -23,7 +23,7 @@ window.addEventListener('DOMContentLoaded', event => {
         });
     }
 
-    Object.prototype.mask = function (mask, options = {}) {
+    Element.prototype.mask = function (mask, options = {}) {
         this.dataset.value = '';
         this.maxLength = mask.length;
 
@@ -41,7 +41,7 @@ window.addEventListener('DOMContentLoaded', event => {
         });
     }
 
-    Object.prototype.serializeObject = function () {
+    Element.prototype.serializeObject = function () {
         const formData = {};
         if (this.tagName.toLowerCase() == 'form') {
             const children = this.querySelectorAll('[name]:not(:disabled)');
@@ -62,7 +62,7 @@ window.addEventListener('DOMContentLoaded', event => {
         return doc.body.firstChild;
     }
 
-    Object.prototype.loadModal = function (url = null) {
+    Element.prototype.loadModal = function (url = null) {
         class HiddenModal {
             constructor(modalElement) {
                 modalElement.innerHTML = '<div class="modal-dialog">' +
@@ -109,7 +109,7 @@ window.addEventListener('DOMContentLoaded', event => {
         });
     }
 
-    Object.prototype.alertModal = function (message, httpCode) {
+    Element.prototype.alertModal = function (message, httpCode) {
         const modalBody = this.querySelector('.modal-body');
 
         if (modalBody) {
@@ -132,7 +132,7 @@ window.addEventListener('DOMContentLoaded', event => {
         }
     }
 
-    Object.prototype.submitModal = function (options = { hideModal: true }) {
+    Element.prototype.submitModal = function (options = { hideModal: true }) {
         if (this.tagName.toLowerCase() == 'form') {
             const form = this;
 
@@ -174,14 +174,14 @@ window.addEventListener('DOMContentLoaded', event => {
                             const crudModal = bootstrap.Modal.getOrCreateInstance(modalElement);
 
                             setTimeout(() => {
-                                if (Object.hasOwnProperty.call(options, 'hideModal')) {
+                                if (Element.hasOwnProperty.call(options, 'hideModal')) {
                                     if (options.hideModal == true) {
                                         crudModal.hide();
                                         window.location.reload();
                                     }
                                 }
 
-                                if (Object.hasOwnProperty.call(options, 'success')) {
+                                if (Element.hasOwnProperty.call(options, 'success')) {
                                     options.success(response.data);
                                 }
                             }, 1100);

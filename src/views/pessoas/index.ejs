@@ -14,13 +14,20 @@
   <table class="table" id="tablePessoas">
     <thead>
       <tr>
-        <th style="width: 1%;" scope="col">#</th>
+        <th style="width: 10%;" scope="col" class="text-center">#</th>
         <th scope="col">Nome e sobrenome</th>
-        <th style="width: 1%;" scope="col">Handle</th>
+        <th style="width: 1%;" scope="col" class="text-center">Handle</th>
       </tr>
     </thead>
     <tbody>
     </tbody>
+    <tfoot>
+      <tr>
+        <th></th>
+        <th></th>
+        <td></td>
+      </tr>
+    </tfoot>
   </table>
 </div>
 
@@ -52,23 +59,26 @@
 
       headElement.appendChild(createdLinkElement);
 
+      const ajaxParams = {};
+
       const table = new JSTable(tableElement, {
-        // searchable: false,
+        searchable: false,
+        addQueryParams: false,
+        ajaxParams,
         serverSide: true,
         ajax: `/pessoas/serverprocessing`,
         columns: [
           {
             select: 0,
             sortable: true,
-            sort: "desc"
-          },
-          {
-            select: 1
+            sort: "desc",
+            render: (cell, idx) => `<div class="text-center">${cell.textContent}</div>`
           },
           {
             select: 2,
             sortable: false,
             searchable: false,
+            dataset: 'text-center',
             render: (cell, idx) => `<div class="text-center"><a style="cursor: pointer" onclick="showModal(${cell.textContent});"><i class="fas fa-pencil"></i></a></div>`
           }
         ],
@@ -79,11 +89,45 @@
           info: "Exibindo {start} até {end} de {rows} registro(s)",
           loading: "Processando...",
           infoFiltered: "Exibindo {start} até {end} de {rows} registro(s) (filtrado de {rowsTotal} registros)"
-        },
+        }
       });
 
-      table.on("init", function () {
-        console.log(Array.prototype.slice.call(document.querySelectorAll(".dt-wrapper")));
+      const divDTSearch = document.createElement('div');
+      divDTSearch.className = 'dt-search';
+
+      const inputDTSearch = document.createElement('input');
+      inputDTSearch.className = 'dt-input';
+      inputDTSearch.placeholder = 'Procure...';
+      inputDTSearch.type = 'text';
+      inputDTSearch.onkeyup = e => {
+        e.preventDefault();
+        if (e.keyCode == 13) {
+          table.search(inputDTSearch.value);
+        }
+      };
+
+      divDTSearch.appendChild(inputDTSearch);
+      document.querySelector('.dt-wrapper .dt-top').appendChild(divDTSearch);
+
+      tableElement.querySelectorAll('tfoot tr > *').forEach((element, i) => {
+        if (element.tagName == 'TH') {
+          const index = i + 1;
+          const placeholder = tableElement.querySelector(`thead tr > *:nth-child(${index})`).textContent;
+          const input = document.createElement('input');
+          input.className = 'dt-input';
+          input.placeholder = placeholder;
+          input.type = 'text';
+          input.onkeyup = e => {
+            e.preventDefault();
+            if (e.keyCode == 13) {
+              
+              ajaxParams[i] = input.value;
+              table.update();
+            }
+          };
+          input.style = 'width: 100%';
+          element.appendChild(input);
+        }
       });
     });
 

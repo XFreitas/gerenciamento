@@ -4,7 +4,7 @@ const {
 } = require('sequelize');
 
 class MainModel extends Model {
-    static serverProcessingMain = async (params = {}) => {
+    static serverProcessing = async (params = {}) => {
         const where = (params.searchQuery.length > 0 && params.searchQuery != 'null' ? `\n        AND (${params.colsWhere.map(col => `${col} LIKE :searchQuery`).join(' OR ')})` : '');
         const data = await sequelize.query(`SELECT ('[' || GROUP_CONCAT(row, ',') || ']') AS data` +
             `\nFROM (` +

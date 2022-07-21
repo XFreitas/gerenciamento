@@ -17,7 +17,7 @@ class Pessoa extends MainModel {
     // define association here
   }
 
-  static serverProcessing = async (params = {}) => MainModel.serverProcessingMain({
+  static serverProcessing = async (params = {}) => MainModel.serverProcessing({
     ...params,
     columns: ["cod", "nome", "id"],
     colsOrder: ["cod", "nome"],
