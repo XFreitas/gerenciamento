@@ -28,7 +28,7 @@
         <th class="text-nowrap" scope="row"><%= contabancaria.id %></th>
         <td class="text-nowrap"><%= contabancaria.pessoa.nome %></td>
         <td class="text-nowrap"><%= contabancaria.tipoconta.nome %></td>
-        <td class="text-nowrap"><%= contabancaria.nome_banco %></td>
+        <td class="text-nowrap"><%= `${contabancaria.codigo_banco} - ${contabancaria.nome_banco}` %></td>
         <td class="text-nowrap"><%= contabancaria.numero %></td>
         <td class="text-center">
           <a style="cursor: pointer;" onclick="showModal('<%= contabancaria.id %>');">
