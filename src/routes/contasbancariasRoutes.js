@@ -23,7 +23,11 @@ module.exports = function (application) {
         contasBancariasController.showmodal(req, res);
     });
 
-    application.post(baseUri('create'), validate.create, contasBancariasController.create);
+    application.put(baseUri('update'), validate, function (req, res) {
+        contasBancariasController.update(req, res);
+    });
+
+    application.post(baseUri('create'), validate, contasBancariasController.create);
 
     application.get(baseUri('serverprocessing'), function (req, res) {
         contasBancariasController.serverProcessing(req, res);

@@ -126,16 +126,19 @@ window.addEventListener('DOMContentLoaded', event => {
                     `<p>${message}</p>` +
                     `</div>`;
 
-                const div = document.createElement('div');
+                const divHeader = document.createElement('div');
+                const divFooter = document.createElement('div');
 
-                div.innerHTML = alertHtml;
+                divHeader.innerHTML = alertHtml;
+                divFooter.innerHTML = alertHtml;
 
-                modalBody.prepend(div);
+                modalBody.insertBefore(divHeader, modalBody.firstChild);
+                modalBody.append(divFooter);
             }
             else {
-                const alert = modalBody.querySelector('.alert');
+                const alert = modalBody.querySelectorAll('.alert');
                 if (alert) {
-                    alert.remove();
+                    alert.forEach(a => a.remove());
                 }
             }
         }
@@ -201,9 +204,23 @@ window.addEventListener('DOMContentLoaded', event => {
                     .catch(function (error) {
                         const response = error.response;
 
-                        if (response.status === 422) {
-                            const message = '<p>' + response.data.errors.map(e => e.msg).join('</p><p>') + '</p>';
-                            form.alertModal(message, response.status);
+                        switch (response.status) {
+                            case 422:
+                                const message = '<p>' + response.data.errors.map(e => e.msg).join('</p><p>') + '</p>';
+                                form.alertModal(message, response.status);
+                                break;
+                            case 401:
+                                form.alertModal('Você não tem permissão para executar esta ação.', response.status);
+                                break;
+                            case 404:
+                                form.alertModal('Recurso não encontrado.', response.status);
+                                break;
+                            case 500:
+                                form.alertModal('Erro interno do servidor.', response.status);
+                                break;
+                            default:
+                                form.alertModal('Erro desconhecido.', response.status);
+                                break;
                         }
                     })
                     .finally(function () {
