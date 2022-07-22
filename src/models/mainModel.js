@@ -33,7 +33,7 @@ class MainModel extends Model {
         const data = await sequelize.query(`SELECT ('[' || GROUP_CONCAT(row, ',') || ']') AS data` +
             `\nFROM (` +
             `\n    SELECT GROUP_CONCAT('['` +
-            `\n        || '"' || ${params.columns.join(` || '",'|| '"' || `)} || '"'` +
+            `\n        || '"' || COALESCE(${params.columns.join(`, '') || '",'|| '"' || COALESCE(`)}, '') || '"'` +
             `\n        || ']', ',') AS row` +
             `\n    FROM (` +
             `\n        ${params.select}` +
