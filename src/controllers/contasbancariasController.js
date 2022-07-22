@@ -62,8 +62,19 @@ module.exports = class ContasBancarias {
         res.render("contasbancarias/createUpdate", data);
     }
 
-    async create(req, res) {
+    create(req, res) {
         ContaModel.create(req.body)
+            .then(contabancaria => {
+                console.log(contabancaria.id);
+                res.status(200).send({ id: contabancaria.id });
+            }).catch(error => {
+                res.status(500).send(error);
+                console.log(error);
+            });
+    }
+
+    update(req, res) {
+        ContaModel.update(req.body, { where: { id: req.body.id } })
             .then(contabancaria => {
                 console.log(contabancaria.id);
                 res.status(200).send({ id: contabancaria.id });
