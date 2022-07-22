@@ -14,6 +14,10 @@ module.exports = function (application) {
         categoriasController.index(req, res);
     });
 
+    application.get(baseUri('createupdate'), (req, res) => categoriasController.createupdate(req, res));
+    application.post(baseUri('createupdate'), (req, res) => categoriasController.create(req, res));
+    application.put(baseUri('createupdate'), (req, res) => categoriasController.update(req, res));
+
     application.get(baseUri('serverprocessing'), function (req, res) {
         categoriasController.serverProcessing(req, res);
     });

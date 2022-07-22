@@ -9,6 +9,20 @@ module.exports = class Categorias {
         require("../helpers").template(this.application, res, "categorias/index", {});
     }
 
+    createupdate = async (req, res) => {
+        const data = {};
+        try {
+            if (req.query) {
+                const id = req.query.id;
+                data['categoria'] = await CategoriaModel.findByPk(id);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+        console.log(data);
+        res.render("categorias/createUpdate", data);
+    }
+
     serverProcessing = async (req, res) => {
         var data = {};
         try {
