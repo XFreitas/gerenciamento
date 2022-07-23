@@ -1,9 +1,11 @@
 'use strict';
 const {
-  Model
+  Model, DataTypes
 } = require('sequelize');
+const { MainModel, sequelize } = require('./mainModel');
+
 module.exports = (sequelize, DataTypes) => {
-  class Registro extends Model {
+  class Registro extends MainModel {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -21,7 +23,7 @@ module.exports = (sequelize, DataTypes) => {
     observacao: DataTypes.TEXT
   }, {
     sequelize,
-    modelName: 'Registro',
+    modelName: 'Registros',
   });
   return Registro;
 };

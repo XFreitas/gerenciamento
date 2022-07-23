@@ -1,0 +1,37 @@
+<div class="row">
+  <div class="col-8">
+    <h1 class="mt-4">Registro</h1>
+    <ol class="breadcrumb mb-4">
+      <li class="breadcrumb-item"><a href="/">Início</a></li>
+      <li class="breadcrumb-item active">Registro</li>
+    </ol>
+  </div>
+  <div class="col-4 my-auto d-flex flex-row-reverse">
+    <button type="button" class="btn btn-primary" onclick="showModal();">Upload</button>
+  </div>
+</div>
+<div class="card mb-4">
+
+</div>
+
+<div class="modal fade" id="crud" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"></h5>
+      </div>
+      <div class="modal-body mx-auto">
+        <div class="spinner-border" role="status"></div>
+      </div>
+      <div class="modal-footer"></div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  function showModal() {
+    const modalElement = document.getElementById('crud');
+
+    modalElement.loadModal(`/registros/upload`);
+  }
+</script>

@@ -23,6 +23,13 @@ window.addEventListener('DOMContentLoaded', event => {
         });
     }
 
+    const activePage = document.querySelector(`#collapseLayouts > nav > a[href="${location.pathname}"]`);
+
+    activePage.classList
+        .add('active');
+
+    document.querySelector('head > title').textContent = activePage.textContent.trim();
+
     Element.prototype.mask = function (mask, options = {}) {
         this.dataset.value = '';
         this.maxLength = mask.length;
@@ -42,12 +49,23 @@ window.addEventListener('DOMContentLoaded', event => {
     }
 
     Element.prototype.serializeObject = function () {
-        const formData = {};
+        const formData = new FormData();
         if (this.tagName.toLowerCase() == 'form') {
             const children = this.querySelectorAll('[name]:not(:disabled)');
 
             children.forEach(child => {
-                if (child.value != '') {
+                if (child.type == 'file') {
+                    formData.append(child.name, child.files[0]);
+                } else if (child.type == 'checkbox') {
+                    if (child.checked) {
+                        formData.append(child.name, child.value);
+                    }
+                }
+                else if (child.type == 'radio') {
+                    if (child.checked) {
+                        formData.append(child.name, child.value);
+                    }
+                } else if (child.value != '') {
                     formData[child.name] = child.value;
                 }
             });
@@ -189,10 +207,8 @@ window.addEventListener('DOMContentLoaded', event => {
                             const crudModal = bootstrap.Modal.getOrCreateInstance(modalElement);
 
                             setTimeout(() => {
-                                if (Element.hasOwnProperty.call(options, 'hideModal')) {
-                                    if (options.hideModal == true) {
-                                        crudModal.hide();
-                                    }
+                                if (options.hideModal == true) {
+                                    crudModal.hide();
                                 }
 
                                 if (Element.hasOwnProperty.call(options, 'success')) {

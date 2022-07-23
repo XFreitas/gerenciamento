@@ -1,0 +1,44 @@
+<div class="modal-dialog">
+  <div class="modal-content">
+    <form action="/registros/upload" method="post" id="formupload" enctype="multipart/form-data">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          <button type="button" class="btn btn-primary btn-sm" onclick="document.getElementById('crud').loadModal()"><i class="fas fa-sync-alt"></i></button>
+          Upload de arquivo de registro
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label for="nome" class="form-label">Arquivo</label>
+          <input type="file" name="upload" id="upload" class="form-control" accept=".csv">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+          <button type="submit" class="btn btn-success">Salvar</button>
+        </div>
+    </form>
+  </div>
+</div>
+
+<script type="text/javascript">
+  {
+    function init() {
+      console.clear();
+      const form = document.querySelector(".modal form#formupload");
+
+      let input = form.querySelector('#upload');
+
+      input.focus();
+
+      form.submitModal({
+        hideModal: false,
+        success: (response) => {
+          console.log(response);
+        }
+      });
+    }
+
+    setTimeout(() => init(), 250);
+  }
+</script>
