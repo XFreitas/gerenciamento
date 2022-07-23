@@ -206,15 +206,13 @@ window.addEventListener('DOMContentLoaded', event => {
                             const modalElement = document.getElementById('crud');
                             const crudModal = bootstrap.Modal.getOrCreateInstance(modalElement);
 
-                            setTimeout(() => {
-                                if (options.hideModal == true) {
+                            if (Element.hasOwnProperty.call(options, 'success')) {
+                                options.success(response.data);
+                            } else if (options.hideModal == true) {
+                                setTimeout(() => {
                                     crudModal.hide();
-                                }
-
-                                if (Element.hasOwnProperty.call(options, 'success')) {
-                                    options.success(response.data);
-                                }
-                            }, 1100);
+                                }, 1100);
+                            }
                         }
                     })
                     .catch(function (error) {

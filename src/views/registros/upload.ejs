@@ -34,7 +34,9 @@
       form.submitModal({
         hideModal: false,
         success: (response) => {
-          console.log(response);
+          setTimeout(() => {
+            form.querySelectorAll('div.alert').forEach(el => el.remove());
+          }, 800);
         }
       });
     }
