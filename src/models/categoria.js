@@ -15,16 +15,20 @@ class Categoria extends MainModel {
     // define association here
   }
 
-  static serverProcessing = async (params = {}) => MainModel.serverProcessing({
-    ...params,
-    columns: ["cod", "categoria", "categoria_pai", "nivel", "id"],
-    colsOrder: ["cod", "categoria", "categoria_pai", "nivel"],
-    colsWhere: ["Categorias.id", "Categorias.nome", "Categorias_pai.nome", "Categorias.nivel"],
-    priorityGroupColumn: 'Categorias.id',
-    select: `SELECT Categorias.id AS cod, Categorias.nome AS categoria, Categorias_pai.nome AS categoria_pai, Categorias.nivel, Categorias.id`,
-    from_join: `FROM Categorias` +
-      `\n        LEFT JOIN Categorias AS Categorias_Pai ON Categorias_Pai.id = Categorias.categoria`,
-  });
+  static serverProcessing = async (params = {}) => {
+const id = `Categorias.id || '-' || Categorias.nivel`;
+
+    return MainModel.serverProcessing({
+      ...params,
+      columns: ["cod", "categoria", "categoria_pai", "nivel", "id"],
+      colsOrder: ["cod", "categoria", "categoria_pai", "nivel"],
+      colsWhere: ["Categorias.id", "Categorias.nome", "Categorias_pai.nome", "Categorias.nivel"],
+      priorityGroupColumn: 'Categorias.id',
+      select: `SELECT Categorias.id AS cod, Categorias.nome AS categoria, Categorias_pai.nome AS categoria_pai, Categorias.nivel, ${id} AS id`,
+      from_join: `FROM Categorias` +
+        `\n        LEFT JOIN Categorias AS Categorias_Pai ON Categorias_Pai.id = Categorias.categoria`,
+    });
+  }
 }
 
 Categoria.init({
@@ -33,7 +37,7 @@ Categoria.init({
   nivel: DataTypes.INTEGER
 }, {
   sequelize,
-  modelName: 'Categoria',
+  modelName: 'Categorias',
 });
 
 

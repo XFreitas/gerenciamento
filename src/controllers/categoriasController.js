@@ -16,7 +16,19 @@ module.exports = class Categorias {
                 const id = req.query.id;
                 data['categoria'] = await CategoriaModel.findByPk(id);
             }
+
+            const categorias = await CategoriaModel.findAll({
+                order: [["nome", "ASC"]],
+            });
+            data['categorias'] = [{ value: '', text: 'Selecione' }];
+            categorias.forEach(categoria => {
+                data['categorias'].push({
+                    value: categoria.id,
+                    text: categoria.nome,
+                });
+            });
         } catch (error) {
+            res.status(500).send(error);
             console.log(error);
         }
         console.log(data);

@@ -56,6 +56,7 @@ module.exports = class ContasBancarias {
                 });
             });
         } catch (error) {
+            res.status(500).send(error);
             console.log(error);
         }
         console.log(data);

@@ -11,6 +11,10 @@
       </div>
       <div class="modal-body">
         <div class="mb-3">
+          <label for="nome" class="form-label">Categoria Pai</label>
+          <%- formHelpers.formDropDown('categoria', categorias, categoria?.categoria, `class="form-select"`) %>
+        </div>
+        <div class="mb-3">
           <label for="nome" class="form-label">Nome</label>
           <input type="text" class="form-control text-uppercase" id="nome" value="<%= categoria ? categoria.nome : '' %>" name="nome" placeholder="Digite um nome aqui..." autocomplete="off">
         </div>

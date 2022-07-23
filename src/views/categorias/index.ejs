@@ -52,9 +52,22 @@
 <script type="text/javascript">
   const tableElement = document.querySelector(`#tableCategorias`);
 
-  window.addEventListener('load', function () {
+  window.addEventListener('load', function() {
     tableElement.serverProcessing({
-      ajax: `/categorias/serverprocessing`
+      ajax: `/categorias/serverprocessing`,
+      columns: [{
+        select: 4,
+        render: function(cell, idx) {
+          const data = cell.innerHTML.split('-');
+          const id = data[0];
+          const nivel = data[1];
+          if (nivel > 0) {
+            return `<a href="/categorias/${id}/edit" class="btn btn-primary btn-sm">Editar</a>`;
+          }
+
+          return '';
+        }
+      }, ],
     });
   });
 
