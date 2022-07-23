@@ -273,13 +273,22 @@ window.addEventListener('DOMContentLoaded', event => {
 
                 const colsSearchFunction = e => {
                     e.preventDefault();
+                    table.isSearching = false;
                     if (e.keyCode == 13) {
                         tableElement.querySelectorAll(`tfoot tr input`).forEach((input, index) => {
                             ajaxParams[`columnsSearch${index}`] = "";
-                            if (input.value)
+                            if (input.value) {
                                 ajaxParams[`columnsSearch${index}`] = input.value;
+                                table.isSearching = true;
+                            }
                         });
-                        table.search(inputDTSearch.value);
+
+                        if (inputDTSearch.value) {
+                            table.search(inputDTSearch.value);
+                        } else {
+                            table.searchQuery = "";
+                            table.update();
+                        }
                     }
                 };
 
