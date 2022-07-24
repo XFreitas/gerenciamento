@@ -49,7 +49,7 @@ window.addEventListener('DOMContentLoaded', event => {
     }
 
     Element.prototype.serializeObject = function () {
-        const formData = new FormData();
+        const formData = {};
         if (this.tagName.toLowerCase() == 'form') {
             const children = this.querySelectorAll('[name]:not(:disabled)');
 
@@ -58,12 +58,12 @@ window.addEventListener('DOMContentLoaded', event => {
                     formData.append(child.name, child.files[0]);
                 } else if (child.type == 'checkbox') {
                     if (child.checked) {
-                        formData.append(child.name, child.value);
+                        formData[child.name] = child.value;
                     }
                 }
                 else if (child.type == 'radio') {
                     if (child.checked) {
-                        formData.append(child.name, child.value);
+                        formData[child.name] = child.value;
                     }
                 } else if (child.value != '') {
                     formData[child.name] = child.value;

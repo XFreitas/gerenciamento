@@ -10,13 +10,18 @@
       </div>
       <div class="modal-body">
         <div class="mb-3">
-          <label for="nome" class="form-label">Arquivo</label>
+          <label for="conta" class="form-label">Conta</label>
+          <%- formHelpers.formDropDown('conta', contas, null, 'class="form-select" id="conta"') %>
+        </div>
+        <div class="mb-3">
+          <label for="upload" class="form-label">Arquivo</label>
           <input type="file" name="upload" id="upload" class="form-control" accept=".csv">
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-          <button type="submit" class="btn btn-success">Salvar</button>
-        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+        <button type="submit" class="btn btn-success">Salvar</button>
+      </div>
     </form>
   </div>
 </div>
@@ -31,14 +36,7 @@
 
       input.focus();
 
-      form.submitModal({
-        hideModal: false,
-        success: (response) => {
-          setTimeout(() => {
-            form.querySelectorAll('div.alert').forEach(el => el.remove());
-          }, 800);
-        }
-      });
+      form.submitModal();
     }
 
     setTimeout(() => init(), 250);
