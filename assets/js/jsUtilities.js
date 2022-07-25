@@ -49,14 +49,19 @@ window.addEventListener('DOMContentLoaded', event => {
     }
 
     Element.prototype.serializeObject = function () {
-        const formData = {};
         if (this.tagName.toLowerCase() == 'form') {
             const children = this.querySelectorAll('[name]:not(:disabled)');
 
+            const isUpload = this.getAttribute('enctype') === 'multipart/form-data';
+
+            if (isUpload) {
+                return new FormData(this);
+            }
+
+            const formData = {};
+
             children.forEach(child => {
-                if (child.type == 'file') {
-                    formData.append(child.name, child.files[0]);
-                } else if (child.type == 'checkbox') {
+                if (child.type == 'checkbox') {
                     if (child.checked) {
                         formData[child.name] = child.value;
                     }
@@ -69,9 +74,11 @@ window.addEventListener('DOMContentLoaded', event => {
                     formData[child.name] = child.value;
                 }
             });
+
+            return formData;
         }
 
-        return formData;
+        return null;
     }
 
     String.prototype.toHtml = function () {
