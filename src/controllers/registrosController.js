@@ -2,7 +2,7 @@ const formidable = require("formidable");
 const path = require("path");
 const fs = require("fs");
 const Conta = require("../models/conta");
-const Pessoa = require("../models/pessoa");
+const Registro = require("../models/registro");
 
 module.exports = class Registros {
     constructor(application) {
@@ -31,7 +31,7 @@ module.exports = class Registros {
 
         form.parse(req, function (error, fields, file) {
             const filepath = file.upload.filepath;
-            
+
             const data = fs.readFileSync(filepath, "utf8");
 
             const lines = data.split("\r\n");
@@ -45,11 +45,17 @@ module.exports = class Registros {
                 });
             });
 
-            console.log(registros);
-            console.log(req.body);
-            console.log(fields);
+            registros.forEach(async registro => {
+                await Registro.create({
+                    categoria: null,
+                    conta: fields.conta,
+                    dataRegistro: registro.data,
+                    valor: registro.valor,
+                    observacao: registro.observacao.trim().toUpperCase(),
+                });
+            });
 
-            res.status(500).send({ total: registros.length });
+            res.send({ total: registros.length });
         });
     }
 };
