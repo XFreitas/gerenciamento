@@ -13,6 +13,33 @@ class Registro extends MainModel {
   static associate(models) {
     // define association here
   }
+
+  static serverProcessing = (params = {}) => {
+    const dataRegistro = "strftime('%d/%m/%Y', Registros.dataRegistro)";
+
+    return MainModel.serverProcessing({
+      ...params,
+      columns: [
+        "pessoa", "nome_banco", "data", "valor",
+        "observacao", "id",
+      ],
+      colsOrder: [
+        "pessoa", "nome_banco", "dataRegistro",
+        "valor", "observacao",
+      ],
+      colsWhere: [
+        "Pessoas.nome", "Contas.nome_banco", dataRegistro,
+        "Registros.valor", "Registros.observacao"
+      ],
+      priorityGroupColumn: 'Registros.id',
+      select: `select Pessoas.nome as pessoa, Contas.nome_banco,` +
+        `    strftime('%d/%m/%Y', Registros.dataRegistro) as data,` +
+        `    Registros.valor, Registros.observacao, Registros.id, Registros.dataRegistro`,
+      from_join: `from Registros\n` +
+        `inner join Contas on Contas.id = Registros.conta\n` +
+        `inner join Pessoas on Pessoas.id = Contas.pessoa\n`,
+    });
+  }
 }
 Registro.init({
   categoria: DataTypes.INTEGER,

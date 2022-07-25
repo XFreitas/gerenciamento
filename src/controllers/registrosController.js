@@ -58,4 +58,15 @@ module.exports = class Registros {
             res.send({ total: registros.length });
         });
     }
+
+    serverProcessing = async (req, res) => {
+        let data = {};
+        try {
+            data = await Registro.serverProcessing(req.query ?? req.body);
+        } catch (error) {
+            console.log(error);
+        }
+
+        res.json(data);
+    }
 };

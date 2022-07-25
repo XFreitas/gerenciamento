@@ -11,7 +11,30 @@
   </div>
 </div>
 <div class="card mb-4">
-
+  <table class="table" id="tableRegistros">
+    <thead>
+      <tr>
+        <th style="width: 1%;" scope="col">Titular</th>
+        <th style="width: 1%;" scope="col">Banco</th>
+        <th style="width: 1%;" scope="col">Data</th>
+        <th style="width: 1%;" scope="col">Valor</th>
+        <th scope="col">Observação</th>
+        <th style="width: 1%;" scope="col" class="text-center">Handle</th>id
+      </tr>
+    </thead>
+    <tbody>
+    </tbody>
+    <tfoot>
+      <tr>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <td></td>
+      </tr>
+    </tfoot>
+  </table>
 </div>
 
 <div class="modal fade" id="crud" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
@@ -29,6 +52,42 @@
 </div>
 
 <script type="text/javascript">
+  const tableElement = document.querySelector(`#tableRegistros`);
+
+  window.addEventListener('load', function() {
+    const formatter = new StringMask('#.##0,00', {
+      reverse: true
+    });
+    tableElement.serverProcessing({
+      ajax: `/registros/serverprocessing`,
+      columns: [{
+          select: 0,
+          sortable: true,
+          sort: "desc",
+          render: (cell, idx) => `<div class="text-center">${cell.textContent}</div>`
+        },
+        {
+          select: 3,
+          render: (cell, idx) => {
+            let valor = parseFloat(cell.textContent) * 100;
+            return `<div class="text-right">R$ ${formatter.apply(valor)}</div>`;
+          }
+        },
+        {
+          select: 4,
+          render: (cell, idx) => `<small style="white-space: normal;">${cell.textContent}</small>`
+        },
+        {
+          select: 5,
+          sortable: false,
+          searchable: false,
+          dataset: 'text-center',
+          render: (cell, idx) => `<div class="text-center"><a style="cursor: pointer" onclick="showModal(${cell.textContent});"><i class="fas fa-pencil"></i></a></div>`
+        }
+      ]
+    });
+  });
+
   function showModal() {
     const modalElement = document.getElementById('crud');
 
