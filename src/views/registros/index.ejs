@@ -22,8 +22,7 @@
         <th style="width: 1%;" scope="col" class="text-center">Handle</th>id
       </tr>
     </thead>
-    <tbody>
-    </tbody>
+    <tbody></tbody>
     <tfoot>
       <tr>
         <th></th>
@@ -55,9 +54,6 @@
   const tableElement = document.querySelector(`#tableRegistros`);
 
   window.addEventListener('load', function() {
-    const formatter = new StringMask('#.##0,00', {
-      reverse: true
-    });
     tableElement.serverProcessing({
       ajax: `/registros/serverprocessing`,
       columns: [{
@@ -69,8 +65,9 @@
         {
           select: 3,
           render: (cell, idx) => {
-            let valor = parseFloat(cell.textContent) * 100;
-            return `<div class="text-right">R$ ${formatter.apply(valor)}</div>`;
+            const aux = (cell.textContent.split('-'));
+            const textRed = (aux.length > 1) ? 'text-danger' : 'text-success';
+            return `<div class="float-end ${textRed} fw-bold">R$ ${aux[aux.length - 1]}</div>`;
           }
         },
         {
