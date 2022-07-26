@@ -54,6 +54,7 @@
 
   window.addEventListener('load', function() {
     tableElement.serverProcessing({
+      perPage: 10,
       ajax: `/categorias/serverprocessing`,
       columns: [{
         select: 4,

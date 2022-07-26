@@ -4,20 +4,29 @@
       <input type="hidden" name="id" value="<%= categoria ? categoria.id : '' %>">
       <div class="modal-header">
         <h5 class="modal-title">
-          <button type="button" class="btn btn-primary btn-sm" onclick="document.getElementById('crud').loadModal()"><i class="fas fa-sync-alt"></i></button>
+          <button type="button" class="btn btn-primary btn-sm" onclick="document.getElementById('crud').loadModal()"><i
+              class="fas fa-sync-alt"></i></button>
           <%= categoria ? 'Atualizar' : 'Cadastrar' %> categoria
         </h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <div class="mb-3">
-          <label for="nome" class="form-label">Categoria Pai</label>
-          <%- formHelpers.formDropDown('categoria', categorias, categoria?.categoria, `class="form-select"`) %>
-        </div>
-        <div class="mb-3">
-          <label for="nome" class="form-label">Nome</label>
-          <input type="text" class="form-control text-uppercase" id="nome" value="<%= categoria ? categoria.nome : '' %>" name="nome" placeholder="Digite um nome aqui..." autocomplete="off">
-        </div>
+        <% if (niveis) { %>
+          <div class="mb-3">
+            <label for="nome" class="form-label">Nível<small> para pesquisar em <i>Categoria Pai</i></small></label>
+            <%- formHelpers.formDropDown('nivel', niveis, null, `class="form-select" `) %>
+          </div>
+          <% } %>
+            <div class="mb-3">
+              <label for="nome" class="form-label">Categoria Pai</label>
+              <%- formHelpers.formDropDown('categoria', categorias, categoria?.categoria, `class="form-select" `) %>
+            </div>
+            <div class="mb-3">
+              <label for="nome" class="form-label">Nome</label>
+              <input type="text" class="form-control text-uppercase" id="nome"
+                value="<%= categoria ? categoria.nome : '' %>" name="nome" placeholder="Digite um nome aqui..."
+                autocomplete="off">
+            </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
@@ -44,6 +53,36 @@
           tableElement.JSTable.update();
         }
       });
+
+      const selectElementNivel = document.querySelector(`select[name="nivel"]`);
+      const categorias = [...document.querySelectorAll(`select[name="categoria"] > option`)]
+        .map(option => ({
+          value: option.value,
+          text: option.innerText,
+          nivel: option.innerText.split(' - ')[0]
+        }));
+
+      if (selectElementNivel.length > 0) {
+        selectElementNivel.addEventListener('change', (e) => {
+          const nivel = selectElementNivel.value;
+          const selectElementCategoria = document.querySelector(`select[name="categoria"]`);
+          selectElementCategoria.innerHTML = '';
+          if (nivel) {
+            selectElementCategoria.innerHTML = `<option value="">Selecione uma categoria</option>`;
+            const categoria = categorias.filter(n => n.nivel == nivel);
+            console.log(categoria);
+            if (categoria) {
+              categoria.forEach(c => {
+                selectElementCategoria.innerHTML += `<option value="${c.value}">${c.text}</option>`;
+              });
+            }
+          } else {
+            categorias.forEach(c => {
+              selectElementCategoria.innerHTML += `<option value="${c.value}">${c.text}</option>`;
+            });
+          }
+        });
+      }
     }
 
     setTimeout(() => init(), 250);

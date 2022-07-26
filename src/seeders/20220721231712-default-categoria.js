@@ -3,8 +3,10 @@
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.bulkInsert('Categorias', [
-      "INVESTIMENTOS",
+      "RECEITA",
+      "DESPESA",
       "DOAÇÕES",
+      "INVESTIMENTOS",
       "TRANSFERÊNCIA ENTRE CONTAS",
       "DIVISÃO DE GASTOS",
       "LANÇAMENTOS FUTUROS",
