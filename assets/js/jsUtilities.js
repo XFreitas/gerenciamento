@@ -23,6 +23,13 @@ window.addEventListener('DOMContentLoaded', event => {
         });
     }
 
+    const activePage = document.querySelector(`#collapseLayouts > nav > a[href="${location.pathname}"]`);
+
+    activePage.classList
+        .add('active');
+
+    document.querySelector('head > title').textContent = activePage.textContent.trim();
+
     Element.prototype.mask = function (mask, options = {}) {
         this.dataset.value = '';
         this.maxLength = mask.length;
@@ -42,18 +49,36 @@ window.addEventListener('DOMContentLoaded', event => {
     }
 
     Element.prototype.serializeObject = function () {
-        const formData = {};
         if (this.tagName.toLowerCase() == 'form') {
             const children = this.querySelectorAll('[name]:not(:disabled)');
 
+            const isUpload = this.getAttribute('enctype') === 'multipart/form-data';
+
+            if (isUpload) {
+                return new FormData(this);
+            }
+
+            const formData = {};
+
             children.forEach(child => {
-                if (child.value != '') {
+                if (child.type == 'checkbox') {
+                    if (child.checked) {
+                        formData[child.name] = child.value;
+                    }
+                }
+                else if (child.type == 'radio') {
+                    if (child.checked) {
+                        formData[child.name] = child.value;
+                    }
+                } else if (child.value != '') {
                     formData[child.name] = child.value;
                 }
             });
+
+            return formData;
         }
 
-        return formData;
+        return null;
     }
 
     String.prototype.toHtml = function () {
@@ -188,17 +213,13 @@ window.addEventListener('DOMContentLoaded', event => {
                             const modalElement = document.getElementById('crud');
                             const crudModal = bootstrap.Modal.getOrCreateInstance(modalElement);
 
-                            setTimeout(() => {
-                                if (Element.hasOwnProperty.call(options, 'hideModal')) {
-                                    if (options.hideModal == true) {
-                                        crudModal.hide();
-                                    }
-                                }
-
-                                if (Element.hasOwnProperty.call(options, 'success')) {
-                                    options.success(response.data);
-                                }
-                            }, 1100);
+                            if (Element.hasOwnProperty.call(options, 'success')) {
+                                options.success(response.data);
+                            } else if (options.hideModal == true) {
+                                setTimeout(() => {
+                                    crudModal.hide();
+                                }, 1100);
+                            }
                         }
                     })
                     .catch(function (error) {

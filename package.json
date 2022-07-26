@@ -12,14 +12,16 @@
   "dependencies": {
     "@jstable/jstable": "^1.6.0",
     "axios": "^0.27.2",
+    "body-parser": "^1.20.0",
     "consign": "^0.1.6",
     "ejs": "^3.1.8",
     "express": "^4.18.1",
     "express-validator": "^6.14.2",
+    "formidable": "^2.0.1",
     "fs": "^0.0.1-security",
+    "moment": "^2.29.4",
     "sequelize": "^6.21.2",
     "sqlite3": "^5.0.8",
     "string-mask": "^0.3.0"
-  },
-  "devDependencies": { }
+  }
 }
