@@ -37,7 +37,7 @@ Categoria.init({
   nivel: DataTypes.INTEGER
 }, {
   sequelize,
-  modelName: 'Categoria',
+  modelName: 'Categorias',
 });
 
 

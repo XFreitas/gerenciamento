@@ -32,7 +32,7 @@ Pessoa.init({
   nome: DataTypes.TEXT
 }, {
   sequelize,
-  modelName: 'Pessoa',
+  modelName: 'Pessoas',
 });
 
 module.exports = Pessoa;

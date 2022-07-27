@@ -13,26 +13,14 @@ module.exports = class Categorias {
         const data = {};
         try {
             if (Object.keys(req.body).length > 0) {
+                let categoria;
                 if (req.body.id) {
-                    await CategoriaModel.update({ nome: req.body.nome }, { where: { id: req.body.id } })
-                        .then(categoria => {
-                            console.log(categoria.id);
-                            res.status(200).send({ id: categoria.id });
-                        }).catch(error => {
-                            res.status(500).send(error);
-                            console.log(error);
-                        });
+                    categoria = await CategoriaModel.update({ nome: req.body.nome }, { where: { id: req.body.id } });
                 } else {
                     const nivelPai = await CategoriaModel.findOne({ where: { id: req.body.categoria } });
-                    await CategoriaModel.create({ nome: req.body.nome, nivel: nivelPai.nivel + 1 })
-                        .then(categoria => {
-                            console.log(categoria.id);
-                            res.status(200).send({ id: categoria.id });
-                        }).catch(error => {
-                            res.status(500).send(error);
-                            console.log(error);
-                        });
+                    categoria = await CategoriaModel.create({ categoria: req.body.categoria, nome: req.body.nome, nivel: nivelPai.nivel + 1 });
                 }
+                res.status(200).send({ id: categoria.id });
                 return;
             }
 
