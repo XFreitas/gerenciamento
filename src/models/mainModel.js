@@ -45,11 +45,11 @@ class MainModel extends Model {
             `\n        ${params.from_join}` +
             `\n    WHERE 1=1` +
             where +
-            order +
-            `\n        LIMIT ${params.length}` +
-            `\n        OFFSET ${params.start}` +
             `\n    ) AS foo` +
             `\n    GROUP BY ${params.priorityGroupColumn.split('.').slice(-1)}` +
+            order +
+            `\n    LIMIT ${params.length}` +
+            `\n    OFFSET ${params.start}` +
             `\n) AS foo`, {
             type: QueryTypes.SELECT,
             replacements: {

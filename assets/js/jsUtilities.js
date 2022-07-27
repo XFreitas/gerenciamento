@@ -215,7 +215,8 @@ window.addEventListener('DOMContentLoaded', event => {
 
                             if (Element.hasOwnProperty.call(options, 'success')) {
                                 options.success(response.data);
-                            } else if (options.hideModal == true) {
+                            }
+                            if (options.hideModal == true) {
                                 setTimeout(() => {
                                     crudModal.hide();
                                 }, 1100);
