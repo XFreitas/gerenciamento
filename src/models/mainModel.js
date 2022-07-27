@@ -30,6 +30,11 @@ class MainModel extends Model {
             where += `\n        AND ${auxColumnWhere.map(col => `${col}`).join(' AND ')}`;
         }
 
+        let order = ``;
+        if (typeof params.colsOrder[params.sortColumn] != "undefined") {
+            order = `\n    ORDER BY ${params.colsOrder[params.sortColumn]}${["asc", "desc"].indexOf(params.sortDirection) > -1 ? ` ${params.sortDirection}` : ''}`
+        }
+
         const data = await sequelize.query(`SELECT ('[' || GROUP_CONCAT(row, ',') || ']') AS data` +
             `\nFROM (` +
             `\n    SELECT GROUP_CONCAT('['` +
@@ -38,15 +43,13 @@ class MainModel extends Model {
             `\n    FROM (` +
             `\n        ${params.select}` +
             `\n        ${params.from_join}` +
-            `\n        WHERE 1=1` +
+            `\n    WHERE 1=1` +
             where +
+            order +
             `\n        LIMIT ${params.length}` +
             `\n        OFFSET ${params.start}` +
             `\n    ) AS foo` +
             `\n    GROUP BY ${params.priorityGroupColumn.split('.').slice(-1)}` +
-            (typeof params.colsOrder[params.sortColumn] != "undefined"
-                ? `\n    ORDER BY ${params.colsOrder[params.sortColumn]}${["asc", "desc"].indexOf(params.sortDirection) > -1 ? ` ${params.sortDirection}` : ''}`
-                : '') +
             `\n) AS foo`, {
             type: QueryTypes.SELECT,
             replacements: {

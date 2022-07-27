@@ -14,10 +14,15 @@ class Registro extends MainModel {
     // define association here
   }
 
-  static serverProcessing = (params = {}) => {
+  static serverProcessing = async (params = {}) => {
     const dataRegistro = "strftime('%d/%m/%Y', Registros.dataRegistro)";
+    const { nArredonda, removeVirgulaPonto } = require('../helpers/index');
 
-    return MainModel.serverProcessing({
+    if (params.columnsSearch3 != '') {
+      params.columnsSearch3 = removeVirgulaPonto(params.columnsSearch3);
+    }
+
+    const a = await MainModel.serverProcessing({
       ...params,
       columns: [
         "pessoa", "nome_banco", "data", "valor",
@@ -25,7 +30,7 @@ class Registro extends MainModel {
       ],
       colsOrder: [
         "pessoa", "nome_banco", "dataRegistro",
-        "valor", "observacao",
+        "Registros.valor", "observacao",
       ],
       colsWhere: [
         "Pessoas.nome", "Contas.nome_banco", dataRegistro,
@@ -39,6 +44,13 @@ class Registro extends MainModel {
         `inner join Contas on Contas.id = Registros.conta\n` +
         `inner join Pessoas on Pessoas.id = Contas.pessoa\n`,
     });
+
+
+    for (let index = 0; index < a.data.length; index++) {
+      a.data[index][3] = nArredonda(a.data[index][3], 2, true);
+    }
+
+    return a;
   }
 }
 Registro.init({
