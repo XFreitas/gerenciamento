@@ -8,10 +8,28 @@ module.exports.isEmpty = value => (typeof value === 'undefined'
     || value.length === 0
     || Object.keys(value).length === 0);
 
-const removeVirgulaPonto = (valor) => valor
-    .replace(/( )/g, '')
-    .replace(/\./g, '')
-    .replace(/\,/, '.');
+const removeVirgulaPonto = (valor) => {
+    if(typeof valor === 'undefined') {
+        return '';
+    }
+    
+    // 0 000,00 => 0000.00
+    valor = valor.replace(/\s/g, '');
+    
+    // 0.000.000,00 => 0000000.00
+    if ((valor.indexOf(',') > -1) && (valor.indexOf('.') > -1)) {
+        valor = valor.replace(/\./g, '');
+        valor = valor.replace(/,/g, '.');
+    }
+
+    // 0,00 => 0.00
+    if (valor.indexOf(',') > -1) {
+        valor = valor.replace(/,/g, '.');
+    }
+
+    return valor;
+}
+
 
 module.exports.removeVirgulaPonto = removeVirgulaPonto;
 
