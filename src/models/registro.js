@@ -30,7 +30,7 @@ class Registro extends MainModel {
       ],
       colsOrder: [
         "pessoa", "nome_banco", "dataRegistro",
-        "valor", "observacao",
+        "Registros.valor", "observacao",
       ],
       colsWhere: [
         "Pessoas.nome", "Contas.nome_banco", dataRegistro,
