@@ -25,14 +25,12 @@ class Registro extends MainModel {
   }
 
   static serverProcessing = async (params = {}) => {
-    const dataRegistro = "strftime('%w-%d/%m/%Y', Registros.dataRegistro)";
+
+    const valorformatted = MainModel.formatNumber('Registros.valor', 2);
+
+    const dataRegistro = MainModel.formatDate('Registros.dataRegistro');
+
     const categoria = "coalesce(Categorias.nome, 'Sem categoria')";
-
-    const { nArredonda, removeVirgulaPonto } = require('../helpers/index');
-
-    if (params.columnsSearch3 != '') {
-      params.columnsSearch3 = removeVirgulaPonto(params.columnsSearch3);
-    }
 
     const where = ['where 1 = 1'];
 
@@ -43,7 +41,7 @@ class Registro extends MainModel {
     const a = await MainModel.serverProcessing({
       ...params,
       columns: [
-        "categoria", "data", "valor",
+        "categoria", "data", "valorformatted",
         "observacao", "id",
       ],
       colsOrder: [
@@ -52,24 +50,18 @@ class Registro extends MainModel {
       ],
       colsWhere: [
         categoria, dataRegistro,
-        "Registros.valor", "Registros.observacao"
+        valorformatted, "Registros.observacao"
       ],
       priorityGroupColumn: 'Registros.id',
       select: `select ${categoria} as categoria,` +
-        `    ${dataRegistro} as data,` +
-        `    Registros.valor, Registros.observacao, Registros.id, Registros.dataRegistro`,
+        `    (${dataRegistro}) as data,` +
+        `    (${valorformatted}) as valorformatted,` +
+        `    Registros.observacao, Registros.id,` +
+        `    Registros.dataRegistro, Registros.valor`,
       from_join: `from Registros\n` +
         `left join Categorias on Categorias.id = Registros.categoria\n`,
       where: where.join('\n    and '),
     });
-
-
-    for (let index = 0; index < a.data.length; index++) {
-      a.data[index][2] = nArredonda(a.data[index][2], 2, true);
-
-      const data = a.data[index][1].split('-');
-      a.data[index][1] = `${weekdays[data[0]]} ${data[1]}`;
-    }
 
     return a;
   }

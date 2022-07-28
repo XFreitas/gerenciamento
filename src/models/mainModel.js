@@ -4,6 +4,27 @@ const {
 } = require('sequelize');
 
 class MainModel extends Model {
+
+    static formatNumber = (sqlField, casasDecimais = 2) => {
+        const zeros = '0'.repeat(casasDecimais);
+
+        return `replace(printf('%,3d', ${sqlField}), ',', '.') || ',' || case instr(${sqlField}, '.')` +
+            `  when 0 then '${zeros}'` +
+            `  else substr(substr(${sqlField}, instr(${sqlField}, '.') + 1, ${casasDecimais}) || '${zeros}', 1, ${casasDecimais}) end`
+    };
+
+    static formatDate = (sqlField) => `case strftime('%w', ${sqlField})` +
+        `  when '0' then 'Dom'` +
+        `  when '1' then 'Seg'` +
+        `  when '2' then 'Ter'` +
+        `  when '3' then 'Qua'` +
+        `  when '4' then 'Qui'` +
+        `  when '5' then 'Sex'` +
+        `  when '6' then 'Sab'` +
+        `  end` +
+        `  ||` +
+        `  strftime(' %d/%m/%Y', ${sqlField})`;
+
     static serverProcessing = async (params = {}) => {
         if (typeof params.where === 'undefined') {
             params.where = `\nwhere 1 = 1`;
