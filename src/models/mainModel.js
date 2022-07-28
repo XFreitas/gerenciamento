@@ -5,10 +5,13 @@ const {
 
 class MainModel extends Model {
     static serverProcessing = async (params = {}) => {
-        let where = ``;
+        if (typeof params.where === 'undefined') {
+            params.where = `\nwhere 1 = 1`;
+        }
+
         const auxSearchQuery = {};
         if ((params.searchQuery.length > 0 && params.searchQuery != 'null')) {
-            where += `\n        AND (${params.colsWhere.map(col => (params.searchQuery.split(';').map((v, i) => `${col} LIKE :searchQuery${i}`).join(' OR '))).join(' OR ')})`
+            params.where += `\n        AND (${params.colsWhere.map(col => (params.searchQuery.split(';').map((v, i) => `${col} LIKE :searchQuery${i}`).join(' OR '))).join(' OR ')})`
             params.searchQuery.split(';').map((v, i) => {
                 auxSearchQuery[`searchQuery${i}`] = `%${v}%`;
             });
@@ -27,7 +30,7 @@ class MainModel extends Model {
         });
         console.log({ colsSearch, auxColumnWhere });
         if (auxColumnWhere.length > 0) {
-            where += `\n        AND ${auxColumnWhere.map(col => `${col}`).join(' AND ')}`;
+            params.where += `\n        AND ${auxColumnWhere.map(col => `${col}`).join(' AND ')}`;
         }
 
         let order = ``;
@@ -43,8 +46,7 @@ class MainModel extends Model {
             `\n    FROM (` +
             `\n        ${params.select}` +
             `\n        ${params.from_join}` +
-            `\n    WHERE 1=1` +
-            where +
+            params.where +
             `\n    ) AS foo` +
             `\n    GROUP BY ${params.priorityGroupColumn.split('.').slice(-1)}` +
             order +
@@ -61,7 +63,7 @@ class MainModel extends Model {
                 type: QueryTypes.SELECT,
                 replacements: {}
             }),
-            recordsFiltered = await sequelize.query(`SELECT COUNT(${params.priorityGroupColumn}) AS count ${params.from_join} WHERE 1=1${where}`, {
+            recordsFiltered = await sequelize.query(`SELECT COUNT(${params.priorityGroupColumn}) AS count ${params.from_join} ${params.where}`, {
                 type: QueryTypes.SELECT,
                 replacements: {
                     ...colsSearch,

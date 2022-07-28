@@ -10,12 +10,18 @@
     <button type="button" class="btn btn-primary" onclick="showModal();">Upload</button>
   </div>
 </div>
+<div class="row">
+  <div class="mb-3">
+    <label for="conta" class="form-label">Conta</label>
+    <% console.log(contas); %>
+    <%- formHelpers.formDropDown('', contas, null, `class="form-select" id="conta" onchange="reloadTable(this.value);"`) %>
+  </div>
+</div>
 <div class="card mb-4">
   <table class="table" id="tableRegistros">
     <thead>
       <tr>
-        <th style="width: 1%;" scope="col">Titular</th>
-        <th style="width: 1%;" scope="col">Banco</th>
+        <th style="width: 1%;" scope="col">Categoria</th>
         <th style="width: 1%;" scope="col">Data</th>
         <th style="width: 1%;" scope="col">Valor</th>
         <th scope="col">Observação</th>
@@ -25,7 +31,6 @@
     <tbody></tbody>
     <tfoot>
       <tr>
-        <th></th>
         <th></th>
         <th></th>
         <th></th>
@@ -57,13 +62,7 @@
     tableElement.serverProcessing({
       ajax: `/registros/serverprocessing`,
       columns: [{
-          select: 0,
-          sortable: true,
-          sort: "desc",
-          render: (cell, idx) => `<div class="text-center">${cell.textContent}</div>`
-        },
-        {
-          select: 3,
+          select: 2,
           render: (cell, idx) => {
             const aux = (cell.textContent.split('-'));
             const textRed = (aux.length > 1) ? 'text-danger' : 'text-success';
@@ -71,11 +70,11 @@
           }
         },
         {
-          select: 4,
+          select: 3,
           render: (cell, idx) => `<small style="white-space: normal;">${cell.textContent}</small>`
         },
         {
-          select: 5,
+          select: 4,
           sortable: false,
           searchable: false,
           dataset: 'text-center',
@@ -89,5 +88,17 @@
     const modalElement = document.getElementById('crud');
 
     modalElement.loadModal(`/registros/upload`);
+  }
+
+  function reloadTable(value) {
+    delete tableElement.JSTable.config.ajaxParams['conta'];
+    delete tableElement.JSTable.config.ajaxParams['conta'];
+
+    if (value) {
+      tableElement.JSTable.config.ajaxParams['conta'] = value;
+    }
+
+    tableElement.JSTable.isSearching = true;
+    tableElement.JSTable.update();
   }
 </script>

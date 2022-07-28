@@ -2,6 +2,7 @@ const formidable = require("formidable");
 const path = require("path");
 const fs = require("fs");
 const Conta = require("../models/conta");
+const Pessoa = require("../models/pessoa");
 const Registro = require("../models/registro");
 
 module.exports = class Registros {
@@ -9,8 +10,26 @@ module.exports = class Registros {
         this.application = application;
     }
 
-    index = (req, res) => {
-        require("../helpers").template(this.application, res, "registros/index", {});
+    index = async (req, res) => {
+        const data = {};
+        const contas = await Conta.findAll();
+
+        data.contas = [{
+            value: '',
+            text: "Todas"
+        }];
+        
+        for (let index = 0; index < contas.length; index++) {
+            const conta = contas[index];
+            const pessoa = await Pessoa.findByPk(conta.pessoa);
+
+            data.contas.push({
+                value: conta.id,
+                text: `${pessoa.nome}: ${conta.nome_banco} - ${conta.numero}`,
+            });
+        }
+
+        require("../helpers").template(this.application, res, "registros/index", data);
     }
 
     upload = async (req, res) => {
