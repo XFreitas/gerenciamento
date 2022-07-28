@@ -11,7 +11,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <% if (niveis) { %>
+        <% if (typeof niveis !=="undefined" ) { %>
           <div class="mb-3">
             <label for="nome" class="form-label">Nível<small> para pesquisar em <i>Categoria Pai</i></small></label>
             <%- formHelpers.formDropDown('nivel', niveis, null, `class="form-select" `) %>
@@ -62,7 +62,7 @@
           nivel: option.innerText.split(' - ')[0]
         }));
 
-      if (selectElementNivel.length > 0) {
+      if (selectElementNivel && selectElementNivel.length > 0) {
         selectElementNivel.addEventListener('change', (e) => {
           const nivel = selectElementNivel.value;
           const selectElementCategoria = document.querySelector(`select[name="categoria"]`);
@@ -70,10 +70,11 @@
           if (nivel) {
             selectElementCategoria.innerHTML = `<option value="">Selecione uma categoria</option>`;
             const categoria = categorias.filter(n => n.nivel == nivel);
-            console.log(categoria);
+            
             if (categoria) {
+              let cntCategoria = categoria.length;
               categoria.forEach(c => {
-                selectElementCategoria.innerHTML += `<option value="${c.value}">${c.text}</option>`;
+                selectElementCategoria.innerHTML += `<option value="${c.value}"${(cntCategoria == 1 ? 'selected' : '')}>${c.text}</option>`;
               });
             }
           } else {

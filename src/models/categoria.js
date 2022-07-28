@@ -16,15 +16,15 @@ class Categoria extends MainModel {
   }
 
   static serverProcessing = async (params = {}) => {
-const id = `Categorias.id || '-' || Categorias.nivel`;
+    const id = `Categorias.id || '-' || Categorias.nivel`;
 
     return MainModel.serverProcessing({
       ...params,
-      columns: ["cod", "categoria", "categoria_pai", "nivel", "id"],
+      columns: ["cod", "categoria", "categoria_pai", "nivel", "id", "id_excluir"],
       colsOrder: ["cod", "categoria", "categoria_pai", "nivel"],
       colsWhere: ["Categorias.id", "Categorias.nome", "Categorias_pai.nome", "Categorias.nivel"],
       priorityGroupColumn: 'Categorias.id',
-      select: `SELECT Categorias.id AS cod, Categorias.nome AS categoria, Categorias_pai.nome AS categoria_pai, Categorias.nivel, ${id} AS id`,
+      select: `SELECT Categorias.id AS cod, Categorias.nome AS categoria, Categorias_pai.nome AS categoria_pai, Categorias.nivel, ${id} AS id, ${id} AS id_excluir`,
       from_join: `FROM Categorias` +
         `\n        LEFT JOIN Categorias AS Categorias_Pai ON Categorias_Pai.id = Categorias.categoria`,
     });

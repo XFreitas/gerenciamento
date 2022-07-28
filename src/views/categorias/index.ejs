@@ -14,11 +14,12 @@
   <table class="table" id="tableCategorias">
     <thead>
       <tr>
-        <th style="width: 10%;" scope="col" class="text-center">#</th>
+        <th style="width: 10%; text-align: center;" scope="col">#</th>
         <th scope="col">Categoria</th>
         <th scope="col">Categoria Pai</th>
-        <th style="width: 1%;" scope="col">Nível</th>
-        <th style="width: 1%;" scope="col" class="text-center">Handle</th>
+        <th style="width: 10%; text-align: center;" scope="col">Nível</th>
+        <th style="width: 1%;" scope="col"></th>
+        <th style="width: 1%;" scope="col"></th>
       </tr>
     </thead>
     <tbody>
@@ -29,6 +30,7 @@
         <th></th>
         <th></th>
         <th></th>
+        <td></td>
         <td></td>
       </tr>
     </tfoot>
@@ -52,23 +54,48 @@
 <script type="text/javascript">
   const tableElement = document.querySelector(`#tableCategorias`);
 
-  window.addEventListener('load', function() {
+  window.addEventListener('load', function () {
     tableElement.serverProcessing({
       perPage: 10,
       ajax: `/categorias/serverprocessing`,
       columns: [{
+        select: 0,
+        sortable: true,
+        sort: "desc",
+        render: (cell, idx) => `<div class="text-center">${cell.textContent}</div>`,
+      },
+      {
+        select: 3,
+        render: (cell, idx) => `<div class="text-center">${cell.textContent}</div>`,
+      },
+      {
         select: 4,
-        render: function(cell, idx) {
+        sortable: false,
+        searchable: false,
+        render: function (cell, idx) {
           const data = cell.innerHTML.split('-');
           const id = data[0];
           const nivel = data[1];
           if (nivel > 0) {
-            return `<a href="/categorias/${id}/edit" class="btn btn-primary btn-sm">Editar</a>`;
+            return `<div class="text-center"><a style="cursor: pointer" onclick="showModal(${id});"><i class="fas fa-pencil"></i></a></div>`;
           }
-
           return '';
         }
-      }, ],
+      },
+      {
+        select: 5,
+        sortable: false,
+        searchable: false,
+        render: function (cell, idx) {
+          const data = cell.innerHTML.split('-');
+          const id = data[0];
+          const nivel = data[1];
+          if (nivel > 0) {
+            return `<div class="text-center"><a style="cursor: pointer" onclick="console.log('excluir')"><i class="fas fa-trash"></i></a></div>`;
+          }
+          return '';
+        }
+      }],
     });
   });
 

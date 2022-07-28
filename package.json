@@ -22,6 +22,7 @@
     "moment": "^2.29.4",
     "sequelize": "^6.21.2",
     "sqlite3": "^5.0.8",
+    "startbootstrap-sb-admin": "^7.0.5",
     "string-mask": "^0.3.0"
   }
 }

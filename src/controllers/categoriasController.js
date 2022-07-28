@@ -1,3 +1,4 @@
+const { Op } = require("sequelize");
 const CategoriaModel = require("../models/categoria");
 
 module.exports = class Categorias {
@@ -10,28 +11,33 @@ module.exports = class Categorias {
     }
 
     createupdate = async (req, res) => {
-        const data = {};
+        const data = {
+            categoria: null
+        };
         try {
             if (Object.keys(req.body).length > 0) {
                 let categoria;
+                const nivelPai = await CategoriaModel.findOne({ where: { id: req.body.categoria } });
                 if (req.body.id) {
-                    categoria = await CategoriaModel.update({ nome: req.body.nome }, { where: { id: req.body.id } });
+                    categoria = await CategoriaModel.update({ categoria: req.body.categoria, nome: req.body.nome, nivel: nivelPai.nivel + 1 }, { where: { id: req.body.id } });
                 } else {
-                    const nivelPai = await CategoriaModel.findOne({ where: { id: req.body.categoria } });
                     categoria = await CategoriaModel.create({ categoria: req.body.categoria, nome: req.body.nome, nivel: nivelPai.nivel + 1 });
                 }
                 res.status(200).send({ id: categoria.id });
                 return;
             }
 
-            if (req.query) {
+            const where = {};
+            if (req.query.id) {
                 const id = req.query.id;
                 data.categoria = await CategoriaModel.findByPk(id);
+                where.id = { [Op.ne]: id };
             }
 
             const categorias = await CategoriaModel.findAll({
                 attributes: ["id", ["(nivel || ' - ' || nome)", "nome"], "nivel"],
                 order: [["nome", "ASC"]],
+                where
             });
             data.categorias = [{ value: '', text: 'Selecione uma categoria' }];
             if (!data.categoria) {
