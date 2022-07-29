@@ -225,25 +225,7 @@ window.addEventListener('DOMContentLoaded', event => {
                     })
                     .catch(function (error) {
                         const response = error.response;
-
-                        switch (response.status) {
-                            case 422:
-                                const message = '<p>' + response.data.errors.map(e => e.msg).join('</p><p>') + '</p>';
-                                form.alertModal(message, response.status);
-                                break;
-                            case 401:
-                                form.alertModal('Você não tem permissão para executar esta ação.', response.status);
-                                break;
-                            case 404:
-                                form.alertModal('Recurso não encontrado.', response.status);
-                                break;
-                            case 500:
-                                form.alertModal('Erro interno do servidor.', response.status);
-                                break;
-                            default:
-                                form.alertModal('Erro desconhecido.', response.status);
-                                break;
-                        }
+                        form.alertModal(msgByStatus(response), response.status);
                     })
                     .finally(function () {
                         buttonSubmit.disabled = false;
@@ -340,4 +322,90 @@ window.addEventListener('DOMContentLoaded', event => {
                 tableElement.JSTable = table;
             });
     }
+
 });
+
+const msgByStatus = response => {
+    switch (response.status) {
+        case 422:
+            const message = '<p>' + response.data.errors.map(e => e.msg).join('</p><p>') + '</p>';
+            return message;
+        case 401:
+            return 'Você não tem permissão para executar esta ação.';
+        case 404:
+            return 'Recurso não encontrado.';
+        case 500:
+            return 'Erro interno do servidor.';
+        default:
+            return 'Erro desconhecido.';
+    }
+};
+
+const deleteById = async (url, data, callbackSuccess) => {
+    try {
+        const value = await swal({
+            title: 'Você tem certeza?',
+            text: 'Você não poderá reverter esta ação.',
+            icon: 'warning',
+            buttons: {
+                cancel: {
+                    text: "Cancelar",
+                    value: null,
+                    visible: true,
+                    className: "",
+                    closeModal: true,
+                },
+                confirm: {
+                    text: "OK",
+                    value: true,
+                    visible: true,
+                    className: "",
+                    closeModal: true
+                }
+            },
+            dangerMode: true,
+        });
+        if (value) {
+            swal({
+                icon: '/assets/img/loading.gif',
+                buttons: false,
+                closeOnClickOutside: false,
+                closeOnEsc: false
+            });
+            const method = 'DELETE';
+            const response = await axios({
+                method,
+                url,
+                data
+            });
+            if (response.status === 200) {
+                await swal({
+                    title: 'Sucesso',
+                    text: 'Registro excluído com sucesso.',
+                    icon: 'success',
+                    buttons: false,
+                    timer: 1200,
+                    closeOnClickOutside: false,
+                    closeOnEsc: false
+                });
+                if (typeof callbackSuccess === 'function') {
+                    callbackSuccess();
+                }
+            }
+        }
+    } catch (error) {
+        console.log(error);
+        await swal({
+            title: 'Erro',
+            text: `Erro ao deletar registro.`,
+            content: {
+                element: 'div',
+                attributes: {
+                    innerHTML: msgByStatus(error.response)
+                }
+            },
+            icon: 'error'
+        });
+        deleteById(url, data);
+    }
+}
