@@ -1,5 +1,10 @@
 'use strict';
 module.exports = {
+  /**
+   * 
+   * @param {import('sequelize/types').QueryInterface} queryInterface 
+   * @param {import('sequelize/types').DataTypes} Sequelize 
+   */
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('Registros', {
       id: {
@@ -34,6 +39,9 @@ module.exports = {
       },
       observacao: {
         type: Sequelize.TEXT
+      },
+      divisao: {
+        type: Sequelize.INTEGER
       },
       createdAt: {
         allowNull: false,
