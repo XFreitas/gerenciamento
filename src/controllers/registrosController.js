@@ -3,6 +3,7 @@ const path = require("path");
 const fs = require("fs");
 const Conta = require("../models/conta");
 const Pessoa = require("../models/pessoa");
+const Categoria = require("../models/categoria");
 const Registro = require("../models/registro");
 
 module.exports = class Registros {
@@ -18,7 +19,7 @@ module.exports = class Registros {
             value: '',
             text: "Todas"
         }];
-        
+
         for (let index = 0; index < contas.length; index++) {
             const conta = contas[index];
             const pessoa = await Pessoa.findByPk(conta.pessoa);
@@ -77,6 +78,42 @@ module.exports = class Registros {
             res.send({ total: registros.length });
         });
     }
+
+    categorizar = async (req, res) => {
+        const data = {};
+
+        if (req.method === "POST") {
+            await Registro.update({
+                categoria: req.body.categoria,
+            }, {
+                where: {
+                    id: req.body.id,
+                }
+            });
+
+            res.send({ success: true });
+            return;
+        }
+
+        const categorias = await Categoria.findAll();
+        data.id = req.query.id;
+
+        data.categorias = [{
+            value: '',
+            text: "Selecione..."
+        }];
+
+        for (let index = 0; index < categorias.length; index++) {
+            const categoria = categorias[index];
+            data.categorias.push({
+                value: categoria.id,
+                text: categoria.nome,
+            });
+        }
+
+        console.log(data);
+        res.render("registros/categorizar", data);
+    };
 
     serverProcessing = async (req, res) => {
         let data = {};

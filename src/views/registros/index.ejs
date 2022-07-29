@@ -62,6 +62,26 @@
     tableElement.serverProcessing({
       ajax: `/registros/serverprocessing`,
       columns: [{
+          select: 0,
+          render: (cell, idx) => {
+            const data = cell.textContent.split('-');
+
+            let btnClass = `btn-success`;
+            if (data[0] == 'CATEGORIZAR') {
+              btnClass = `btn-danger`;
+            }
+
+            return `<div class="text-center d-grid gap-2">` +
+              `  <button type="button" class="btn ${btnClass} btn-sm fw-bold" onclick="categorizar('${data[1]}');">${data[0]}</button>` +
+              `</div>`;
+          }
+        },
+        {
+          select: 1,
+          sort: 'asc',
+          sortable: true,
+        },
+        {
           select: 2,
           render: (cell, idx) => {
             const aux = (cell.textContent.split('-'));
@@ -80,7 +100,7 @@
           dataset: 'text-center',
           render: (cell, idx) => `<div class="text-center"><a style="cursor: pointer" onclick="showModal(${cell.textContent});"><i class="fas fa-pencil"></i></a></div>`
         }
-      ]
+      ],
     });
   });
 
@@ -100,5 +120,11 @@
 
     tableElement.JSTable.isSearching = true;
     tableElement.JSTable.update();
+  }
+
+  function categorizar(id) {
+    const modalElement = document.getElementById('crud');
+
+    modalElement.loadModal(`/registros/categorizar?id=${id}`);
   }
 </script>

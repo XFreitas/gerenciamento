@@ -30,7 +30,7 @@ class Registro extends MainModel {
 
     const dataRegistro = MainModel.formatDate('Registros.dataRegistro');
 
-    const categoria = "coalesce(Categorias.nome, 'Sem categoria')";
+    const categoria = "coalesce(Categorias.nome, 'CATEGORIZAR')";
 
     const where = ['where 1 = 1'];
 
@@ -62,6 +62,10 @@ class Registro extends MainModel {
         `left join Categorias on Categorias.id = Registros.categoria\n`,
       where: where.join('\n    and '),
     });
+
+    for (let index = 0; index < a.data.length; index++) {
+      a.data[index][0] += `-${a.data[index][4]}`;
+    }
 
     return a;
   }

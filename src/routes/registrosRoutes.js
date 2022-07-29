@@ -17,6 +17,9 @@ module.exports = function (application) {
     application.get(baseUri('upload'), (req, res) => registrosController.upload(req, res));
     application.post(baseUri('upload'), (req, res) => registrosController.doUpload(req, res));
 
+    application.post(baseUri('categorizar'), (req, res) => registrosController.categorizar(req, res));
+    application.get(baseUri('categorizar'), (req, res) => registrosController.categorizar(req, res));
+
     application.get(baseUri('serverprocessing'), function (req, res) {
         registrosController.serverProcessing(req, res);
     });
