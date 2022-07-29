@@ -16,8 +16,10 @@ module.exports = function (application) {
     });
 
     application.get(baseUri('createupdate'), (req, res) => categoriasController.createupdate(req, res));
-    application.post(baseUri('createupdate'), validate, (req, res) => categoriasController.createupdate(req, res));
-    application.put(baseUri('createupdate'), validate, (req, res) => categoriasController.createupdate(req, res));
+    application.post(baseUri('createupdate'), validate.createUpdate, (req, res) => categoriasController.createupdate(req, res));
+    application.put(baseUri('createupdate'), validate.createUpdate, (req, res) => categoriasController.createupdate(req, res));
+    
+    application.delete(baseUri('delete'), validate.delete, (req, res) => categoriasController.delete(req, res));
 
     application.get(baseUri('serverprocessing'), function (req, res) {
         categoriasController.serverProcessing(req, res);

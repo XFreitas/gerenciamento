@@ -64,6 +64,21 @@ module.exports = class Categorias {
         res.render("categorias/createUpdate", data);
     }
 
+    delete = async (req, res) => {
+        try {
+            await CategoriaModel.destroy({
+                where: {
+                    id: req.body.id
+                }
+            });
+            res.status(200).send();
+        }
+        catch (error) {
+            res.status(500).send(error);
+            console.log(error);
+        }
+    }
+
     serverProcessing = async (req, res) => {
         var data = {};
         try {
