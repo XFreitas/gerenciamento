@@ -15,10 +15,7 @@ module.exports = class Registros {
         const data = {};
         const contas = await Conta.findAll();
 
-        data.contas = [{
-            value: '',
-            text: "Todas"
-        }];
+        data.contas = [];
 
         for (let index = 0; index < contas.length; index++) {
             const conta = contas[index];

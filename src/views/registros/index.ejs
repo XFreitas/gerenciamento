@@ -101,7 +101,12 @@
           render: (cell, idx) => `<div class="text-center"><a style="cursor: pointer" onclick="showModal(${cell.textContent});"><i class="fas fa-pencil"></i></a></div>`
         }
       ],
+      ajaxParams: {
+        conta: document.querySelector(`#conta`).value
+      }
     });
+
+
   });
 
   function showModal() {
@@ -111,7 +116,6 @@
   }
 
   function reloadTable(value) {
-    delete tableElement.JSTable.config.ajaxParams['conta'];
     delete tableElement.JSTable.config.ajaxParams['conta'];
 
     if (value) {

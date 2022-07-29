@@ -252,7 +252,10 @@ window.addEventListener('DOMContentLoaded', event => {
 
                 headElement.appendChild(createdLinkElement);
 
-                const ajaxParams = {};
+                let ajaxParams = {};
+                if (Object.hasOwnProperty.call(options, 'ajaxParams')) {
+                    ajaxParams = options.ajaxParams;
+                }
 
                 const jsTableOptions = {
                     ...options,
