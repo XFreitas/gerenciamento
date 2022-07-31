@@ -73,8 +73,10 @@ class Registro extends MainModel {
 Registro.init({
   categoria: DataTypes.INTEGER,
   conta: DataTypes.INTEGER,
+  duplicata: DataTypes.INTEGER,
   dataRegistro: DataTypes.DATE,
   valor: DataTypes.DECIMAL,
+  divisao: DataTypes.INTEGER,
   observacao: DataTypes.TEXT
 }, {
   sequelize,
