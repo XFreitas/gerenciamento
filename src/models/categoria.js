@@ -27,6 +27,7 @@ class Categoria extends MainModel {
       select: `SELECT Categorias.id AS cod, Categorias.nome AS categoria, Categorias_pai.nome AS categoria_pai, Categorias.nivel, ${id} AS id, ${id} AS id_excluir`,
       from_join: `FROM Categorias` +
         `\n        LEFT JOIN Categorias AS Categorias_Pai ON Categorias_Pai.id = Categorias.categoria`,
+      // where: `WHERE 1 = 2`,
     });
   }
 }

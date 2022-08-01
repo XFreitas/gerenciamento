@@ -35,21 +35,21 @@ class Registro extends MainModel {
     const where = ['where 1 = 1'];
 
     if (typeof params.conta !== 'undefined') {
-      where.push(`Registros.conta = ${params.conta}`);
+      where.push(`Registros.conta = '${params.conta}'`);
     }
 
     const a = await MainModel.serverProcessing({
       ...params,
       columns: [
-        "categoria", "data", "valorformatted",
+        "id", "categoria", "data", "valorformatted",
         "observacao", "id",
       ],
       colsOrder: [
-        "categoria", "dataRegistro",
+        '', "categoria", "dataRegistro",
         "valor", "observacao",
       ],
       colsWhere: [
-        categoria, dataRegistro,
+        '', categoria, dataRegistro,
         valorformatted, "Registros.observacao"
       ],
       priorityGroupColumn: 'Registros.id',
@@ -64,7 +64,7 @@ class Registro extends MainModel {
     });
 
     for (let index = 0; index < a.data.length; index++) {
-      a.data[index][0] += `-${a.data[index][4]}`;
+      a.data[index][1] += `-${a.data[index][5]}`;
     }
 
     return a;

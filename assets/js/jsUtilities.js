@@ -258,7 +258,7 @@ window.addEventListener('DOMContentLoaded', event => {
                 }
 
                 const jsTableOptions = {
-                    ...options,
+                    perPage: 10,
                     searchable: false,
                     addQueryParams: false,
                     ajaxParams,
@@ -270,11 +270,12 @@ window.addEventListener('DOMContentLoaded', event => {
                         info: "Exibindo {start} até {end} de {rows} registro(s)",
                         loading: "Processando...",
                         infoFiltered: "Exibindo {start} até {end} de {rows} registro(s) (filtrado de {rowsTotal} registros)"
-                    }
+                    },
+                    ...options,
                 };
 
                 const table = new JSTable(tableElement, jsTableOptions);
-
+                
                 const divDTSearch = document.createElement('div');
                 divDTSearch.className = 'dt-search';
 

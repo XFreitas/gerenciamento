@@ -28,6 +28,10 @@ class MainModel extends Model {
     static serverProcessing = async (params = {}) => {
         if (typeof params.where === 'undefined') {
             params.where = `\nwhere 1 = 1`;
+        } else {
+            if (params.where.indexOf('\n') == -1) {
+                params.where = `\n${params.where}`;
+            }
         }
 
         const auxSearchQuery = {};
@@ -80,7 +84,7 @@ class MainModel extends Model {
                 ...auxSearchQuery
             }
         }),
-            recordsTotal = await sequelize.query(`SELECT COUNT(${params.priorityGroupColumn}) AS count ${params.from_join}`, {
+            recordsTotal = await sequelize.query(`SELECT COUNT(${params.priorityGroupColumn}) AS count ${params.from_join} ${params.where}`, {
                 type: QueryTypes.SELECT,
                 replacements: {}
             }),
@@ -98,7 +102,6 @@ class MainModel extends Model {
             recordsFiltered: (typeof recordsFiltered[0] !== 'undefined' ? recordsFiltered[0].count : 0),
         };
     };
-    // console.log(data);
 }
 
 module.exports = { sequelize, MainModel };

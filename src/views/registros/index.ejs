@@ -14,13 +14,15 @@
   <div class="mb-3">
     <label for="conta" class="form-label">Conta</label>
     <% console.log(contas); %>
-    <%- formHelpers.formDropDown('', contas, null, `class="form-select" id="conta" onchange="reloadTable(this.value);"`) %>
+      <%- formHelpers.formDropDown('', contas, null, `class="form-select" id="conta" onchange="reloadTable(this.value);"
+        `) %>
   </div>
 </div>
 <div class="card mb-4">
   <table class="table" id="tableRegistros">
     <thead>
       <tr>
+        <th style="width: 1%;" scope="col"></th>
         <th style="width: 1%;" scope="col">Categoria</th>
         <th style="width: 1%;" scope="col">Data</th>
         <th style="width: 1%;" scope="col">Valor</th>
@@ -31,6 +33,7 @@
     <tbody></tbody>
     <tfoot>
       <tr>
+        <td></td>
         <th></th>
         <th></th>
         <th></th>
@@ -58,55 +61,60 @@
 <script type="text/javascript">
   const tableElement = document.querySelector(`#tableRegistros`);
 
-  window.addEventListener('load', function() {
+  window.addEventListener('load', function () {
     tableElement.serverProcessing({
       ajax: `/registros/serverprocessing`,
       columns: [{
-          select: 0,
-          render: (cell, idx) => {
-            const data = cell.textContent.split('-');
-
-            let btnClass = `btn-success`;
-            if (data[0] == 'CATEGORIZAR') {
-              btnClass = `btn-danger`;
-            }
-
-            return `<div class="text-center d-grid gap-2">` +
-              `  <button type="button" class="btn ${btnClass} btn-sm fw-bold" onclick="categorizar('${data[1]}');">${data[0]}</button>` +
-              `</div>`;
-          }
-        },
-        {
-          select: 1,
-          sort: 'asc',
-          sortable: true,
-        },
-        {
-          select: 2,
-          render: (cell, idx) => {
-            const aux = (cell.textContent.split('-'));
-            const textRed = (aux.length > 1) ? 'text-danger' : 'text-success';
-            return `<div class="float-end ${textRed} fw-bold">R$ ${aux[aux.length - 1]}</div>`;
-          }
-        },
-        {
-          select: 3,
-          render: (cell, idx) => `<small style="white-space: normal;">${cell.textContent}</small>`
-        },
-        {
-          select: 4,
-          sortable: false,
-          searchable: false,
-          dataset: 'text-center',
-          render: (cell, idx) => `<div class="text-center"><a style="cursor: pointer" onclick="showModal(${cell.textContent});"><i class="fas fa-pencil"></i></a></div>`
+        select: 0,
+        sortable: false,
+        render: (cell, idx) => {
+          return `<input type="checkbox" class="checkbox" id="checkbox${idx}" value="${idx}" onclick="this.closest('tr').className=(this.checked?'selected':'')" />`;
         }
+      },
+      {
+        select: 1,
+        render: (cell, idx) => {
+          const data = cell.textContent.split('-');
+
+          let btnClass = `btn-success`;
+          if (data[0] == 'CATEGORIZAR') {
+            btnClass = `btn-danger`;
+          }
+
+          return `<div class="text-center d-grid gap-2">` +
+            `  <button type="button" class="btn ${btnClass} btn-sm fw-bold" onclick="categorizar('${data[1]}');">${data[0]}</button>` +
+            `</div>`;
+        }
+      },
+      {
+        select: 2,
+        sort: 'asc',
+        sortable: true,
+      },
+      {
+        select: 3,
+        render: (cell, idx) => {
+          const aux = (cell.textContent.split('-'));
+          const textRed = (aux.length > 1) ? 'text-danger' : 'text-success';
+          return `<div class="float-end ${textRed} fw-bold">R$ ${aux[aux.length - 1]}</div>`;
+        }
+      },
+      {
+        select: 4,
+        render: (cell, idx) => `<small style="white-space: normal;">${cell.textContent}</small>`
+      },
+      {
+        select: 5,
+        sortable: false,
+        searchable: false,
+        dataset: 'text-center',
+        render: (cell, idx) => `<div class="text-center"><a style="cursor: pointer" onclick="showModal(${cell.textContent});"><i class="fas fa-pencil"></i></a></div>`
+      }
       ],
       ajaxParams: {
         conta: document.querySelector(`#conta`).value
       }
     });
-
-
   });
 
   function showModal() {
