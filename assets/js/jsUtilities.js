@@ -31,21 +31,7 @@ window.addEventListener('DOMContentLoaded', event => {
     document.querySelector('head > title').textContent = activePage.textContent.trim();
 
     Element.prototype.mask = function (mask, options = {}) {
-        this.dataset.value = '';
-        this.maxLength = mask.length;
-
-        let formatter = new StringMask(mask, options);
-        this.addEventListener('input', event => {
-            if (typeof event.data === 'string') {
-                event.target.dataset.value += event.data;
-            } else {
-                event.target.dataset.value = event.target.value.replace(/[^0-9a-zA-z]/g, '');
-            }
-
-            let result = formatter.apply(event.target.dataset.value);
-
-            event.target.value = result;
-        });
+        Inputmask(mask, options).mask(this);
     }
 
     Element.prototype.serializeObject = function () {

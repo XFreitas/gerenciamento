@@ -1,0 +1,78 @@
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title">
+        <button type="button" class="btn btn-primary btn-sm" onclick="document.getElementById('crud').loadModal()"><i class="fas fa-sync-alt"></i></button>
+        <%= duplicata ? 'Alterar' : 'Cadastrar' %> duplicata
+      </h5>
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <%- formHelpers.formOpen(`/contasbancarias/${duplicata ? 'update' : 'create'}`, (duplicata ? 'put' : 'post'), {id: duplicata?.id}, `id="formduplicata"`) %>
+    <div class="modal-body">
+      <div class="mb-3">
+        <label for="categoria" class="form-label">Categoria</label>
+        <%- formHelpers.formDropDown('categoria', categorias, duplicata?.categoria, `class="form-select" id="categoria"`) %>
+      </div>
+      <div class="mb-3">
+        <label for="conta" class="form-label">Conta</label>
+        <%- formHelpers.formDropDown('conta', contas, duplicata?.conta, `class="form-select" id="conta"`) %>
+      </div>
+      <div class="mb-3">
+        <label for="data" class="form-label">Data</label>
+        <%- formHelpers.formInput('data', duplicata?.data, `class="form-control text-center" id="data" placeholder="__/__/____"`) %>
+      </div>
+      <div class="mb-3">
+        <label for="valor" class="form-label">Valor</label>
+        <%- formHelpers.formInput('valor', duplicata?.valor, `class="form-control text-end" id="valor" placeholder="0,00"`) %>
+      </div>
+      <div class="mb-3">
+        <label for="observacao" class="form-label">Observação</label>
+        <%- formHelpers.formTextarea('observacao', duplicata?.observacao, 3, `class="form-control" id="observacao" oninput="this.value = this.value.toUpperCase();" placeholder="Digite alguma coisa..."`) %>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+      <button type="submit" class="btn btn-success">Salvar</button>
+    </div>
+    </form>
+  </div>
+</div>
+
+<script type="text/javascript">
+  {
+    const modal = document.getElementById('crud');
+    const form = modal.querySelector('form#formduplicata');
+
+    function init() {
+      const selector = document.querySelector('.modal #categoria');
+      selector.focus();
+
+      const inputValor = document.querySelector('.modal #valor');
+      inputValor.mask('###.###.###,##', {
+        autoUnmask: true,
+        removeMaskOnSubmit: true,
+        numericInput: true
+      });
+
+      const dataInput = document.querySelector('.modal #data');
+      flatpickr(dataInput, {
+        dateFormat: 'd/m/Y',
+        position: 'auto center',
+        locale: 'pt',
+        allowInput: true,
+      });
+
+      dataInput.mask('##/##/####');
+
+      form.submitModal({
+        success: function(response) {
+          console.log(response);
+          // window.location.reload();
+          tableElement.JSTable.update();
+        }
+      });
+    }
+
+    setTimeout(() => init(), 250);
+  }
+</script>
