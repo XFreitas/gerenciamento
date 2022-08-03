@@ -34,6 +34,8 @@ class MainModel extends Model {
             }
         }
 
+        const whereModel = params.where;
+
         const auxSearchQuery = {};
         if ((params.searchQuery.length > 0 && params.searchQuery != 'null')) {
             params.where += `\n        AND (${params.colsWhere.map(col => (params.searchQuery.split(';').map((v, i) => `${col} LIKE :searchQuery${i}`).join(' OR '))).join(' OR ')})`
@@ -45,7 +47,7 @@ class MainModel extends Model {
         const colsSearch = {}, auxColumnWhere = [];
         params.colsWhere.forEach((col, index) => {
             if (params[`columnsSearch${index}`]) {
-                let searchC = [];
+                const searchC = [];
                 params[`columnsSearch${index}`].split(';').map((v, i) => {
                     colsSearch[`columnsSearch${index}${i}`] = `%${v}%`;
                     searchC.push(`${col} LIKE :columnsSearch${index}${i}`);
@@ -84,7 +86,7 @@ class MainModel extends Model {
                 ...auxSearchQuery
             }
         }),
-            recordsTotal = await sequelize.query(`SELECT COUNT(${params.priorityGroupColumn}) AS count ${params.from_join} ${params.where}`, {
+            recordsTotal = await sequelize.query(`SELECT COUNT(${params.priorityGroupColumn}) AS count ${params.from_join} ${whereModel}`, {
                 type: QueryTypes.SELECT,
                 replacements: {}
             }),

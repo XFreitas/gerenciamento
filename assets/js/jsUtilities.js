@@ -274,11 +274,14 @@ window.addEventListener('DOMContentLoaded', event => {
                     e.preventDefault();
                     table.isSearching = false;
                     if (e.keyCode == 13) {
-                        tableElement.querySelectorAll(`tfoot tr input`).forEach((input, index) => {
+                        tableElement.querySelectorAll(`tfoot tr > *`).forEach((child, index) => {
                             ajaxParams[`columnsSearch${index}`] = "";
-                            if (input.value) {
-                                ajaxParams[`columnsSearch${index}`] = input.value;
-                                table.isSearching = true;
+                            const input = child.querySelector(`input`);
+                            if (input) {
+                                if (input.value) {
+                                    ajaxParams[`columnsSearch${index}`] = input.value;
+                                    table.isSearching = true;
+                                }
                             }
                         });
 
