@@ -10,8 +10,31 @@
     <button type="button" class="btn btn-primary" onclick="showModal();">Nova duplicata</button>
   </div>
 </div>
+
 <div class="card mb-4">
-  
+  <table class="table" id="tableDuplicatas">
+    <thead>
+      <tr>
+        <th style="width: 1%;" scope="col">#</th>
+        <th scope="col">Pessoa</th>
+        <th style="width: 1%;" scope="col">Categoria</th>
+        <th style="width: 1%;" scope="col">Data</th>
+        <th style="width: 1%;" scope="col">Valor</th>
+        <th style="width: 1%;" scope="col"></th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+    <tfoot>
+      <tr>
+        <td></td>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <td></td>
+      </tr>
+    </tfoot>
+  </table>
 </div>
 
 <div class="modal fade" id="crud" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
@@ -30,6 +53,28 @@
 
 <script type="text/javascript">
   const modalElement = document.getElementById('crud');
+
+  const tableElement = document.querySelector(`#tableDuplicatas`);
+
+  window.addEventListener('load', function() {
+    tableElement.serverProcessing({
+      ajax: `/duplicatas/serverprocessing`,
+      columns: [{
+          select: 4,
+          render: (cell, idx) => {
+            return `<div class="float-end fw-bold text-danger">R$ ${cell.textContent}</div>`;
+          }
+        },
+        {
+          select: 5,
+          sortable: false,
+          searchable: false,
+          dataset: 'text-center',
+          render: (cell, idx) => `<div class="text-center"><a style="cursor: pointer" onclick="showModal(${cell.textContent});"><i class="fas fa-pencil"></i></a></div>`
+        }
+      ]
+    });
+  });
 
   function showModal(id) {
     if (id) {

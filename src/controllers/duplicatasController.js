@@ -68,14 +68,9 @@ module.exports = class Duplicatas {
     }
 
     serverProcessing = async (req, res) => {
-        // select Duplicatas.id, Pessoas.nome, Categorias.nome, Duplicatas.data, Duplicatas.valor
-        // from Duplicatas
-        // inner join Categorias on Categorias.id = Duplicatas.categoria
-        // inner join Contas on Contas.id = Duplicatas.conta
-        // inner join Pessoas on Pessoas.id = Contas.pessoa
         let data = {};
         try {
-            data = await Registro.serverProcessing(req.query ?? req.body);
+            data = await DuplicataModel.serverProcessing(req.query ?? req.body);
         } catch (error) {
             console.log(error);
         }

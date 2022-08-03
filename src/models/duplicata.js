@@ -13,6 +13,40 @@ class Duplicata extends MainModel {
   static associate(models) {
     // define association here
   }
+
+  static serverProcessing = async (params = {}) => {
+    const valorformatted = MainModel.formatNumber('Duplicatas.valor', 2);
+
+    const dataformatted = MainModel.formatDate('Duplicatas.data');
+
+    const a = await MainModel.serverProcessing({
+      ...params,
+      columns: [
+        "id", "pessoa", "categoria",
+        "dataformatted", "valorformatted",
+        "id"
+      ],
+      colsOrder: [
+        "id", "pessoa", "categoria",
+        "data", "valor",
+      ],
+      colsWhere: [
+        "", "Pessoas.nome", "Categorias.nome",
+        dataformatted, valorformatted,
+      ],
+      priorityGroupColumn: 'Duplicatas.id',
+      select: `select Duplicatas.id, Pessoas.nome as pessoa,\n` +
+        `  Categorias.nome as categoria, Duplicatas.data,` +
+        `  Duplicatas.valor, (${valorformatted}) as valorformatted,\n` +
+        `  (${dataformatted}) as dataformatted\n`,
+      from_join: `from Duplicatas\n` +
+        `left join Categorias on Categorias.id = Duplicatas.categoria\n` +
+        `left join Contas on Contas.id = Duplicatas.conta\n` +
+        `left join Pessoas on Pessoas.id = Contas.pessoa`,
+    });
+
+    return a;
+  }
 }
 
 Duplicata.init({

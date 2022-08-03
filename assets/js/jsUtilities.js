@@ -198,19 +198,25 @@ window.addEventListener('DOMContentLoaded', event => {
                             const modalElement = document.getElementById('crud');
                             const crudModal = bootstrap.Modal.getOrCreateInstance(modalElement);
 
-                            if (Element.hasOwnProperty.call(options, 'success')) {
-                                options.success(response.data);
-                            }
                             if (options.hideModal == true) {
                                 setTimeout(() => {
                                     crudModal.hide();
                                 }, 1100);
                             }
+
+                            if (Element.hasOwnProperty.call(options, 'success')) {
+                                options.success(response.data);
+                            }
                         }
                     })
                     .catch(function (error) {
-                        const response = error.response;
-                        form.alertModal(msgByStatus(response), response.status);
+                        if (typeof error.response !== 'undefined') {
+                            const response = error.response;
+                            form.alertModal(msgByStatus(response), response.status);
+                        }
+                        else {
+                            console.log(error);
+                        }
                     })
                     .finally(function () {
                         buttonSubmit.disabled = false;
