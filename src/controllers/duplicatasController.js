@@ -1,6 +1,7 @@
 const CategoriaModel = require('../models/categoria');
 const ContaModel = require('../models/conta');
 const PessoaModel = require('../models/pessoa');
+const DuplicataModel = require('../models/duplicata');
 
 module.exports = class Duplicatas {
     constructor(application) {
@@ -55,7 +56,23 @@ module.exports = class Duplicatas {
         res.render("duplicatas/createUpdate", data);
     }
 
+    create(req, res) {
+        DuplicataModel.create(req.body)
+            .then(duplicata => {
+                console.log(duplicata.id);
+                res.status(200).send({ id: duplicata.id });
+            }).catch(error => {
+                res.status(500).send(error);
+                console.log(error);
+            });
+    }
+
     serverProcessing = async (req, res) => {
+        // select Duplicatas.id, Pessoas.nome, Categorias.nome, Duplicatas.data, Duplicatas.valor
+        // from Duplicatas
+        // inner join Categorias on Categorias.id = Duplicatas.categoria
+        // inner join Contas on Contas.id = Duplicatas.conta
+        // inner join Pessoas on Pessoas.id = Contas.pessoa
         let data = {};
         try {
             data = await Registro.serverProcessing(req.query ?? req.body);

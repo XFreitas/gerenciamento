@@ -72,7 +72,6 @@ window.addEventListener('DOMContentLoaded', event => {
         var doc = parser.parseFromString(this, 'text/html');
         return doc.body.firstChild;
     }
-
     Element.prototype.loadModal = function (url = null) {
         class HiddenModal {
             constructor(modalElement) {
@@ -261,7 +260,7 @@ window.addEventListener('DOMContentLoaded', event => {
                 };
 
                 const table = new JSTable(tableElement, jsTableOptions);
-                
+
                 const divDTSearch = document.createElement('div');
                 divDTSearch.className = 'dt-search';
 

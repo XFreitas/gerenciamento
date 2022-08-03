@@ -7,7 +7,7 @@
       </h5>
       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
     </div>
-    <%- formHelpers.formOpen(`/contasbancarias/${duplicata ? 'update' : 'create'}`, (duplicata ? 'put' : 'post'), {id: duplicata?.id}, `id="formduplicata"`) %>
+    <%- formHelpers.formOpen(`/duplicatas/${duplicata ? 'update' : 'create'}`, (duplicata ? 'put' : 'post'), {id: duplicata?.id}, `id="formduplicata"`) %>
     <div class="modal-body">
       <div class="mb-3">
         <label for="categoria" class="form-label">Categoria</label>
@@ -48,10 +48,10 @@
       selector.focus();
 
       const inputValor = document.querySelector('.modal #valor');
-      inputValor.mask('###.###.###,##', {
+      inputValor.mask('999.999.999,99', {
         autoUnmask: true,
         removeMaskOnSubmit: true,
-        numericInput: true
+        numericInput: true,
       });
 
       const dataInput = document.querySelector('.modal #data');
