@@ -26,4 +26,8 @@ module.exports = function (application) {
     application.get(baseUri('serverprocessing'), function (req, res) {
         duplicatasController.serverProcessing(req, res);
     });
+
+    application.get(baseUri('serverprocessingregistros'), function (req, res) {
+        duplicatasController.serverProcessingRegistros(req, res);
+    });
 };

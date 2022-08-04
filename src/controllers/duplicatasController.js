@@ -61,38 +61,9 @@ module.exports = class Duplicatas {
     showModalPagar = async (req, res) => {
         const data = {};
         try {
-            data['duplicata'] = null;
-            if (req.query) {
-                const id = req.query.id;
-                data['duplicata'] = await DuplicataModel.findByPk(id);
-                data['duplicata'].valor = nArredonda(data['duplicata'].valor, 2, true);
-            }
-
-            data['categorias'] = [{ value: '', text: 'Selecione' }];
-            data['contas'] = [{ value: '', text: 'Selecione' }];
-
-            let categorias = await CategoriaModel.findAll();
-            let contas = await ContaModel.findAll();
-
-            categorias.forEach(tipoconta => {
-                data['categorias'].push({
-                    value: tipoconta.id,
-                    text: tipoconta.nome,
-                });
-            });
-
-            for (const key in contas) {
-                if (Object.hasOwnProperty.call(contas, key)) {
-
-                    const conta = contas[key];
-                    const pessoa = await PessoaModel.findByPk(conta.pessoa);
-
-                    data['contas'].push({
-                        value: conta.id,
-                        text: `${pessoa.nome} - ${conta.numero}`,
-                    });
-                }
-            }
+            const id = req.query.id;
+            data['duplicata'] = await DuplicataModel.findByPk(id);
+            data['duplicata'].valor = nArredonda(data['duplicata'].valor, 2, true);
         } catch (error) {
             res.status(500).send(error);
             console.log(error);
@@ -121,6 +92,17 @@ module.exports = class Duplicatas {
                 res.status(500).send(error);
                 console.log(error);
             });
+    }
+
+    serverProcessingRegistros = async (req, res) => {
+        let data = {};
+        try {
+            data = await DuplicataModel.serverProcessingRegistros(req.query ?? req.body);
+        } catch (error) {
+            console.log(error);
+        }
+
+        res.json(data);
     }
 
     serverProcessing = async (req, res) => {

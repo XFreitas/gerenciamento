@@ -10,7 +10,7 @@
     <%- formHelpers.formOpen(`/duplicatas/pagar`, 'post', {id: duplicata.id}, `id="formpagarduplicata"`) %>
     <div class="modal-body">
       <div class="card mb-3">
-        <table class="table" id="tableRegistros">
+        <table class="table" id="tableRegistros" data-conta="<%= duplicata.conta %>">
           <thead>
             <tr>
               <th scope="col">#</th>
@@ -30,8 +30,12 @@
           </tfoot>
         </table>
       </div>
-      </form>
     </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+      <button type="button" class="btn btn-success" onclick="submitForm();">Salvar</button>
+    </div>
+    <%- formHelpers.formClose() %>
   </div>
 
   <script type="text/javascript">
@@ -54,32 +58,33 @@
 
         tableElementRegistros.serverProcessing({
           ajax: `/duplicatas/serverprocessingregistros`,
+          ajaxParams: {
+            conta: tableElementRegistros.dataset.conta
+          },
           columns: [{
-              select: 4,
-              render: (cell, idx) => {
-                return `<div class="float-end fw-bold text-danger">R$ ${cell.textContent}</div>`;
-              }
-            },
-            {
-              select: 5,
-              render: (cell, idx) => {
-                if (cell.textContent == '') return '';
-                return `<div class="float-end fw-bold text-primary">R$ ${cell.textContent}</div>`;
-              }
-            },
-            {
-              select: 6,
+              select: 0,
               sortable: false,
-              searchable: false,
-              dataset: 'text-center',
-              render: (cell, idx) =>
-                `<div class="text-center">` +
-                `<a class="mx-2" style="cursor: pointer" onclick="showModal(${cell.textContent});"><i class="fas fa-pencil"></i></a>` +
-                `<a class="mx-2" style="cursor: pointer" title="Pagar" onclick="showModalPagar(${cell.textContent});"><i class="fas fa-cash-register"></i></a>` +
-                `</div>`
+              render: (cell, idx) => {
+                return `<div class="text-center">` +
+                  `<input type="checkbox" class="checkbox" name="registro[]" value="${cell.textContent}"` +
+                  ` onclick="this.closest('tr').className=(this.checked?'selected':'')"` +
+                  ` style="zoom: 1.8" />` +
+                  `</div>`;
+              }
+            },
+            {
+              select: 3,
+              render: (cell, idx) => {
+                const aux = (cell.textContent.split('-'));
+                return `<div class="float-end text-danger fw-bold">R$ ${aux[aux.length - 1]}</div>`;
+              }
             }
           ]
         });
+      }
+
+      function submitForm() {
+        form.dispatchEvent(new Event('submit'));
       }
 
       setTimeout(() => init(), 250);

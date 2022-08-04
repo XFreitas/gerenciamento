@@ -172,17 +172,20 @@ window.addEventListener('DOMContentLoaded', event => {
                 form.alertModal();
 
                 const buttonSubmit = form.querySelector(`[type="submit"]`);
-                buttonSubmit.disabled = true;
+                let buttonSubmitHTML = '';
+                if (buttonSubmit) {
+                    buttonSubmit.disabled = true;
 
-                const buttonSubmitHTML = buttonSubmit.innerHTML;
+                    buttonSubmitHTML = buttonSubmit.innerHTML;
 
-                buttonSubmit.innerHTML = '<i class="fas fa-pulse fa-spinner"></i> Salvando...';
+                    buttonSubmit.innerHTML = '<i class="fas fa-pulse fa-spinner"></i> Salvando...';
+                }
 
                 const data = form.serializeObject();
                 const method = form.getAttribute("method");
 
-                form.querySelectorAll('[name]').forEach(input => {
-                    input.disabled = true;
+                form.querySelectorAll('*').forEach(element => {
+                    element.disabled = true;
                 });
 
                 axios({
@@ -219,11 +222,13 @@ window.addEventListener('DOMContentLoaded', event => {
                         }
                     })
                     .finally(function () {
-                        buttonSubmit.disabled = false;
-                        buttonSubmit.innerHTML = buttonSubmitHTML;
+                        if (buttonSubmit) {
+                            buttonSubmit.disabled = false;
+                            buttonSubmit.innerHTML = buttonSubmitHTML;
+                        }
 
-                        form.querySelectorAll('[name]').forEach(input => {
-                            input.disabled = false;
+                        form.querySelectorAll('*').forEach(element => {
+                            element.disabled = false;
                         });
                     });
             });
@@ -301,7 +306,10 @@ window.addEventListener('DOMContentLoaded', event => {
                 inputDTSearch.onkeyup = colsSearchFunction;
 
                 divDTSearch.appendChild(inputDTSearch);
-                document.querySelector('.dt-wrapper .dt-top').appendChild(divDTSearch);
+                tableElement
+                    .closest('.dt-wrapper')
+                    .querySelector('.dt-top')
+                    .appendChild(divDTSearch);
 
                 tableElement.querySelectorAll('tfoot tr > *').forEach((element, i) => {
                     if (element.tagName == 'TH') {
