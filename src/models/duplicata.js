@@ -14,6 +14,48 @@ class Duplicata extends MainModel {
     // define association here
   }
 
+  static serverProcessingRegistros = async (params = {}) => {
+    const valorformatted = MainModel.formatNumber('Registros.valor', 2);
+
+    const dataformatted = MainModel.formatDate('Registros.dataRegistro');
+
+    const where = [];
+
+    if (typeof params.conta !== 'undefined') {
+      where.push(`Registros.conta = '${params.conta}'`);
+      where.push(`Registros.valor < 0`);
+      where.push(`Registros.duplicata isnull`);
+    } else {
+      where.push(`1 = 2`);
+    }
+
+    const a = await MainModel.serverProcessing({
+      ...params,
+      columns: [
+        "id", "categoria",
+        "dataformatted", "valorformatted",
+      ],
+      colsOrder: [
+        "id", "categoria",
+        "dataRegistro", "valor"
+      ],
+      colsWhere: [
+        "", "Categorias.nome",
+        dataformatted, valorformatted,
+      ],
+      priorityGroupColumn: 'Registros.id',
+      select: `select Registros.id,\n` +
+        `  Categorias.nome as categoria, Registros.dataRegistro,` +
+        `  Registros.valor, (${valorformatted}) as valorformatted,\n` +
+        `  (${dataformatted}) as dataformatted\n`,
+      from_join: `from Registros\n` +
+        `left join Categorias on Categorias.id = Registros.categoria\n`,
+      where: `where ${where.join('\n    and ')}`,
+    });
+
+    return a;
+  }
+
   static serverProcessing = async (params = {}) => {
     const valorformatted = MainModel.formatNumber('Duplicatas.valor', 2);
 

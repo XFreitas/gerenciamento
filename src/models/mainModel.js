@@ -38,7 +38,17 @@ class MainModel extends Model {
 
         const auxSearchQuery = {};
         if ((params.searchQuery.length > 0 && params.searchQuery != 'null')) {
-            params.where += `\n        AND (${params.colsWhere.map(col => (params.searchQuery.split(';').map((v, i) => `${col} LIKE :searchQuery${i}`).join(' OR '))).join(' OR ')})`
+            const searchQueryCols = params.colsWhere
+                .filter(e => e.length > 0)
+                .map(col => (
+                    params.searchQuery
+                        .split(';')
+                        .map((v, i) => `${col} LIKE :searchQuery${i}`)
+                        .join(' OR ')
+                ))
+                .join(' OR ');
+
+            params.where += `\n        AND (${searchQueryCols})`
             params.searchQuery.split(';').map((v, i) => {
                 auxSearchQuery[`searchQuery${i}`] = `%${v}%`;
             });
