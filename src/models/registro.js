@@ -30,8 +30,6 @@ class Registro extends MainModel {
 
     const dataRegistro = MainModel.formatDate('Registros.dataRegistro');
 
-    const categoria = "coalesce(Categorias.nome, 'CATEGORIZAR')";
-
     const where = ['where 1 = 1'];
 
     if (typeof params.conta !== 'undefined') {
@@ -49,11 +47,11 @@ class Registro extends MainModel {
         "valor", "observacao",
       ],
       colsWhere: [
-        '', categoria, dataRegistro,
+        '', 'Categorias.nome', dataRegistro,
         valorformatted, "Registros.observacao"
       ],
       priorityGroupColumn: 'Registros.id',
-      select: `select ${categoria} as categoria,` +
+      select: `select Categorias.nome as categoria,` +
         `    (${dataRegistro}) as data,` +
         `    (${valorformatted}) as valorformatted,` +
         `    Registros.observacao, Registros.id,` +
@@ -62,10 +60,6 @@ class Registro extends MainModel {
         `left join Categorias on Categorias.id = Registros.categoria\n`,
       where: where.join('\n    and '),
     });
-
-    for (let index = 0; index < a.data.length; index++) {
-      a.data[index][1] += `-${a.data[index][5]}`;
-    }
 
     return a;
   }

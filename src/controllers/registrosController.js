@@ -5,6 +5,7 @@ const Conta = require("../models/conta");
 const Pessoa = require("../models/pessoa");
 const Categoria = require("../models/categoria");
 const Registro = require("../models/registro");
+const { Op } = require("sequelize");
 
 module.exports = class Registros {
     constructor(application) {
@@ -28,7 +29,7 @@ module.exports = class Registros {
         }
 
         require("../helpers").template(this.application, res, "registros/index", data);
-    }
+    };
 
     upload = async (req, res) => {
         const data = {};
@@ -74,31 +75,47 @@ module.exports = class Registros {
 
             res.send({ total: registros.length });
         });
-    }
+    };
 
-    categorizar = async (req, res) => {
-        const data = {};
-
+    action = async (req, res) => {
         if (req.method === "POST") {
-            await Registro.update({
-                categoria: req.body.categoria,
-            }, {
-                where: {
-                    id: req.body.id,
+            const { ids, acao, campo, categoria } = req.body;
+            if (acao == 'excluir') {
+                Registro.destroy({
+                    where: {
+                        id: {
+                            [Op.in]: ids.split(","),
+                        }
+                    }
+                });
+            } else if (acao == 'atualizar') {
+                if (campo == 'categoria') {
+                    Registro.update({
+                        categoria: categoria,
+                    }, {
+                        where: {
+                            id: {
+                                [Op.in]: ids.split(","),
+                            }
+                        }
+                    });
                 }
-            });
+            }
 
-            res.send({ success: true });
+            res.status(200).send({ success: true });
             return;
         }
 
-        const categorias = await Categoria.findAll();
-        data.id = req.query.id;
+        const data = req.query;
 
         data.categorias = [{
             value: '',
             text: "Selecione..."
         }];
+
+        const categorias = await Categoria.findAll({
+            attributes: ["id", ["(nivel || ' - ' || nome)", "nome"]],
+        });
 
         for (let index = 0; index < categorias.length; index++) {
             const categoria = categorias[index];
@@ -108,8 +125,7 @@ module.exports = class Registros {
             });
         }
 
-        console.log(data);
-        res.render("registros/categorizar", data);
+        res.render("registros/action", data);
     };
 
     serverProcessing = async (req, res) => {
@@ -121,5 +137,5 @@ module.exports = class Registros {
         }
 
         res.json(data);
-    }
+    };
 };

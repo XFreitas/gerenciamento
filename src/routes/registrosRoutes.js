@@ -1,4 +1,5 @@
 const Registros = require("../controllers/registrosController");
+const validate = require("../validations/registros");
 
 const baseUri = function (uri) {
     if (uri) {
@@ -17,8 +18,8 @@ module.exports = function (application) {
     application.get(baseUri('upload'), (req, res) => registrosController.upload(req, res));
     application.post(baseUri('upload'), (req, res) => registrosController.doUpload(req, res));
 
-    application.post(baseUri('categorizar'), (req, res) => registrosController.categorizar(req, res));
-    application.get(baseUri('categorizar'), (req, res) => registrosController.categorizar(req, res));
+    application.get(baseUri('action'), (req, res) => registrosController.action(req, res));
+    application.post(baseUri('action'), validate.acao, (req, res) => registrosController.action(req, res));
 
     application.get(baseUri('serverprocessing'), function (req, res) {
         registrosController.serverProcessing(req, res);

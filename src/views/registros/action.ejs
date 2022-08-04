@@ -1,0 +1,102 @@
+<% if (ids[0] !=`` ) { %>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <%- formHelpers.formOpen(`/registros/action`,`post`,{},`id="formActionRegistro" `) %>
+                <%- formHelpers.formHidden(`ids`,ids.map(v=>v)) %>
+                    <div class="modal-header">
+                        <h5 class="modal-title">
+                            <button type="button" class="btn btn-primary btn-sm"
+                                onclick="document.getElementById(`crud`).loadModal()"><i
+                                    class="fas fa-sync-alt"></i></button>
+                            Ações
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="acao" class="form-label">Ação</label>
+                            <%- formHelpers.formDropDown(`acao`, [ {value:``,text: ` Selecione...` },
+                                {value:`atualizar`,text:`ATUALIZAR`}, {value:`excluir`,text:`EXCLUIR`} ], `` ,
+                                `class="form-select" id="acao" onchange="acaoMain()" ` ) %>
+                        </div>
+                        <div div-acao style="display: none;">
+                            <div class="mb-3">
+                                <label for="campo" class="form-label">Campo</label>
+                                <%- formHelpers.formDropDown(`campo`, [ {value:``,text: `Selecione...` },
+                                    {value:`categoria`,text:`CATEGORIA`} ], `` , `class="form-select" id="campo"
+                                    onchange="acaoCampo()" ` ) %>
+                            </div>
+                            <div class="mb-3" style="display: none;" div-campo="categoria">
+                                <label for="categoria" class="form-label">Categoria</label>
+                                <%- formHelpers.formDropDown(`categoria`, categorias, `` , `class="form-select"
+                                    id="categoria" ` ) %>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                        <button type="submit" class="btn btn-success">Salvar</button>
+                    </div>
+                    <%- formHelpers.formClose() %>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        {
+            const form = document.querySelector(".modal form#formActionRegistro");
+
+            function init() {
+                console.clear();
+
+                form.submitModal({
+                    success: () => tableElement.JSTable.update()
+                });
+            }
+
+            setTimeout(() => init(), 250);
+
+            function acaoMain() {
+                form.querySelector(`[div-acao]`).style.display = `none`;
+                if (form.querySelector("#acao").value == `atualizar`) {
+                    form.querySelector(`[div-acao]`).style.display = `block`;
+                    form.querySelector(`#campo`).focus();
+                }
+            }
+
+            function acaoCampo() {
+                form.querySelector(`[div-campo]`).style.display = `none`;
+                const campo = form.querySelector("#campo").value;
+                form.querySelector(`[div-campo="${campo}"]`).style.display = `block`;
+                if (campo == 'categoria') {
+                    form.querySelector(`#categoria`).focus();
+                }
+            }
+        }
+    </script>
+    <% } else { %>
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <button type="button" class="btn btn-primary btn-sm"
+                            onclick="document.getElementById(`crud`).loadModal()"><i
+                                class="fas fa-sync-alt"></i></button>
+                        Ações
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <div class="alert alert-warning" role="alert">
+                            <h4 class="alert-heading"><i class="fas fa-exclamation-triangle fa-fw"></i> Arenção!
+                            </h4>
+                            <p>Nenhum registro selecionado.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+        <% } %>

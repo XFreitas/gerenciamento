@@ -22,7 +22,7 @@
   <table class="table" id="tableRegistros">
     <thead>
       <tr>
-        <th style="width: 1%;" scope="col">
+        <th style="width: 1%; zoom: .8;" scope="col">
           <div class="btn-group btn-group-sm">
             <button type="button" class="btn btn-primary" title="Selecionar todos"
               onclick="tableElement.querySelectorAll(`[id^=checkbox]`).forEach(el => {el.checked = false;el.click()})">
@@ -33,7 +33,7 @@
               <i class="fa-solid fa-times"></i>
             </button>
           </div>
-          <button type="button" class="btn btn-warning btn-sm" title="Ação">
+          <button type="button" class="btn btn-warning btn-sm" title="Ação" onclick="actionRegistro()">
             <i class="fa-solid fa-arrow-up-right-from-square"></i>
           </button>
         </th>
@@ -73,7 +73,8 @@
 </div>
 
 <script type="text/javascript">
-  const tableElement = document.querySelector(`#tableRegistros`);
+  const tableElement = document.querySelector(`#tableRegistros`),
+    modalElement = document.getElementById('crud');
 
   window.addEventListener('load', function () {
     tableElement.serverProcessing({
@@ -83,24 +84,9 @@
         sortable: false,
         render: (cell, idx) => {
           return `<div class="text-center">` +
-            `<input type="checkbox" class="checkbox" id="checkbox${idx}" value="${idx}"` +
+            `<input type="checkbox" class="checkbox" id="checkbox${idx}" value="${cell.textContent}"` +
             ` onclick="this.closest('tr').className=(this.checked?'selected':'')"` +
             ` style="zoom: 2" />` +
-            `</div>`;
-        }
-      },
-      {
-        select: 1,
-        render: (cell, idx) => {
-          const data = cell.textContent.split('-');
-
-          let btnClass = `btn-success`;
-          if (data[0] == 'CATEGORIZAR') {
-            btnClass = `btn-danger`;
-          }
-
-          return `<div class="text-center d-grid gap-2">` +
-            `  <button type="button" class="btn ${btnClass} btn-sm fw-bold" onclick="categorizar('${data[1]}');">${data[0]}</button>` +
             `</div>`;
         }
       },
@@ -136,8 +122,6 @@
   });
 
   function showModal() {
-    const modalElement = document.getElementById('crud');
-
     modalElement.loadModal(`/registros/upload`);
   }
 
@@ -153,8 +137,11 @@
   }
 
   function categorizar(id) {
-    const modalElement = document.getElementById('crud');
-
     modalElement.loadModal(`/registros/categorizar?id=${id}`);
   }
+
+  const actionRegistro = () => {
+    const ids = Array.from(tableElement.querySelectorAll(`[id^=checkbox]:checked`)).map(chk => chk.value);
+    modalElement.loadModal(`/registros/action?ids[]=${ids.join('&ids[]=')}`);
+  };
 </script>
