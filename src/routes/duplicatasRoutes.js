@@ -19,7 +19,10 @@ module.exports = function (application) {
     application.post(baseUri('create'), validate.createUpdate, (req, res) => duplicatasController.create(req, res));
 
     application.get(baseUri('update'), (req, res) => duplicatasController.showModal(req, res));
-
+    application.put(baseUri('update'), validate.createUpdate, (req, res) => duplicatasController.update(req, res));
+    
+    application.get(baseUri('pagar'), (req, res) => duplicatasController.showModalPagar(req, res));
+    
     application.get(baseUri('serverprocessing'), function (req, res) {
         duplicatasController.serverProcessing(req, res);
     });

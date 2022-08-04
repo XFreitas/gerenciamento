@@ -2,6 +2,7 @@ const CategoriaModel = require('../models/categoria');
 const ContaModel = require('../models/conta');
 const PessoaModel = require('../models/pessoa');
 const DuplicataModel = require('../models/duplicata');
+const { nArredonda } = require('../helpers');
 
 module.exports = class Duplicatas {
     constructor(application) {
@@ -18,10 +19,11 @@ module.exports = class Duplicatas {
         const data = {};
         try {
             data['duplicata'] = null;
-            // if (req.query) {
-            //     const id = req.query.id;
-            //     data['contabancaria'] = await this.contaBancariaModel.findByPk(id);
-            // }
+            if (req.query) {
+                const id = req.query.id;
+                data['duplicata'] = await DuplicataModel.findByPk(id);
+                data['duplicata'].valor = nArredonda(data['duplicata'].valor, 2, true);
+            }
 
             data['categorias'] = [{ value: '', text: 'Selecione' }];
             data['contas'] = [{ value: '', text: 'Selecione' }];
@@ -56,8 +58,62 @@ module.exports = class Duplicatas {
         res.render("duplicatas/createUpdate", data);
     }
 
+    showModalPagar = async (req, res) => {
+        const data = {};
+        try {
+            data['duplicata'] = null;
+            if (req.query) {
+                const id = req.query.id;
+                data['duplicata'] = await DuplicataModel.findByPk(id);
+                data['duplicata'].valor = nArredonda(data['duplicata'].valor, 2, true);
+            }
+
+            data['categorias'] = [{ value: '', text: 'Selecione' }];
+            data['contas'] = [{ value: '', text: 'Selecione' }];
+
+            let categorias = await CategoriaModel.findAll();
+            let contas = await ContaModel.findAll();
+
+            categorias.forEach(tipoconta => {
+                data['categorias'].push({
+                    value: tipoconta.id,
+                    text: tipoconta.nome,
+                });
+            });
+
+            for (const key in contas) {
+                if (Object.hasOwnProperty.call(contas, key)) {
+
+                    const conta = contas[key];
+                    const pessoa = await PessoaModel.findByPk(conta.pessoa);
+
+                    data['contas'].push({
+                        value: conta.id,
+                        text: `${pessoa.nome} - ${conta.numero}`,
+                    });
+                }
+            }
+        } catch (error) {
+            res.status(500).send(error);
+            console.log(error);
+        }
+        console.log(data);
+        res.render("duplicatas/pagar", data);
+    }
+
     create(req, res) {
         DuplicataModel.create(req.body)
+            .then(duplicata => {
+                console.log(duplicata.id);
+                res.status(200).send({ id: duplicata.id });
+            }).catch(error => {
+                res.status(500).send(error);
+                console.log(error);
+            });
+    }
+
+    update(req, res) {
+        DuplicataModel.update(req.body, { where: { id: req.body.id } })
             .then(duplicata => {
                 console.log(duplicata.id);
                 res.status(200).send({ id: duplicata.id });

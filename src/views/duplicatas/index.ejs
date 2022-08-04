@@ -20,6 +20,7 @@
         <th style="width: 1%;" scope="col">Categoria</th>
         <th style="width: 1%;" scope="col">Data</th>
         <th style="width: 1%;" scope="col">Valor</th>
+        <th style="width: 1%;" scope="col">Valor Pago</th>
         <th style="width: 1%;" scope="col"></th>
       </tr>
     </thead>
@@ -27,6 +28,7 @@
     <tfoot>
       <tr>
         <td></td>
+        <th></th>
         <th></th>
         <th></th>
         <th></th>
@@ -67,10 +69,21 @@
         },
         {
           select: 5,
+          render: (cell, idx) => {
+            if (cell.textContent == '') return '';
+            return `<div class="float-end fw-bold text-primary">R$ ${cell.textContent}</div>`;
+          }
+        },
+        {
+          select: 6,
           sortable: false,
           searchable: false,
           dataset: 'text-center',
-          render: (cell, idx) => `<div class="text-center"><a style="cursor: pointer" onclick="showModal(${cell.textContent});"><i class="fas fa-pencil"></i></a></div>`
+          render: (cell, idx) =>
+            `<div class="text-center">` +
+            `<a class="mx-2" style="cursor: pointer" onclick="showModal(${cell.textContent});"><i class="fas fa-pencil"></i></a>` +
+            `<a class="mx-2" style="cursor: pointer" title="Pagar" onclick="showModalPagar(${cell.textContent});"><i class="fas fa-cash-register"></i></a>` +
+            `</div>`
         }
       ]
     });
@@ -82,5 +95,9 @@
     } else {
       modalElement.loadModal('/duplicatas/create');
     }
+  }
+
+  function showModalPagar(id) {
+    modalElement.loadModal(`/duplicatas/pagar?id=${id}`);
   }
 </script>

@@ -1,0 +1,87 @@
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title">
+        <button type="button" class="btn btn-primary btn-sm" onclick="document.getElementById('crud').loadModal()"><i class="fas fa-sync-alt"></i></button>
+        Pagar duplicata
+      </h5>
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <%- formHelpers.formOpen(`/duplicatas/pagar`, 'post', {id: duplicata.id}, `id="formpagarduplicata"`) %>
+    <div class="modal-body">
+      <div class="card mb-3">
+        <table class="table" id="tableRegistros">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Categoria</th>
+              <th scope="col">Data</th>
+              <th scope="col">Valor</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+          <tfoot>
+            <tr>
+              <td></td>
+              <th></th>
+              <th></th>
+              <th></th>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+      </form>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    {
+      const modal = document.getElementById('crud');
+      const form = modal.querySelector('form#formpagarduplicata');
+
+      const tableElementRegistros = document.querySelector(`#tableRegistros`);
+
+      function init() {
+        console.clear();
+
+        form.submitModal({
+          success: function(response) {
+            console.log(response);
+            // window.location.reload();
+            tableElement.JSTable.update();
+          }
+        });
+
+        tableElementRegistros.serverProcessing({
+          ajax: `/duplicatas/serverprocessingregistros`,
+          columns: [{
+              select: 4,
+              render: (cell, idx) => {
+                return `<div class="float-end fw-bold text-danger">R$ ${cell.textContent}</div>`;
+              }
+            },
+            {
+              select: 5,
+              render: (cell, idx) => {
+                if (cell.textContent == '') return '';
+                return `<div class="float-end fw-bold text-primary">R$ ${cell.textContent}</div>`;
+              }
+            },
+            {
+              select: 6,
+              sortable: false,
+              searchable: false,
+              dataset: 'text-center',
+              render: (cell, idx) =>
+                `<div class="text-center">` +
+                `<a class="mx-2" style="cursor: pointer" onclick="showModal(${cell.textContent});"><i class="fas fa-pencil"></i></a>` +
+                `<a class="mx-2" style="cursor: pointer" title="Pagar" onclick="showModalPagar(${cell.textContent});"><i class="fas fa-cash-register"></i></a>` +
+                `</div>`
+            }
+          ]
+        });
+      }
+
+      setTimeout(() => init(), 250);
+    }
+  </script>
