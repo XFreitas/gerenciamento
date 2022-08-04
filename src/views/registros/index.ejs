@@ -22,7 +22,21 @@
   <table class="table" id="tableRegistros">
     <thead>
       <tr>
-        <th style="width: 1%;" scope="col"></th>
+        <th style="width: 1%;" scope="col">
+          <div class="btn-group btn-group-sm">
+            <button type="button" class="btn btn-primary" title="Selecionar todos"
+              onclick="tableElement.querySelectorAll(`[id^=checkbox]`).forEach(el => {el.checked = false;el.click()})">
+              <i class="fa-solid fa-check"></i>
+            </button>
+            <button type="button" class="btn btn-danger" title="Deselecionar todos"
+              onclick="tableElement.querySelectorAll(`[id^=checkbox]`).forEach(el => {el.checked = true;el.click()})">
+              <i class="fa-solid fa-times"></i>
+            </button>
+          </div>
+          <button type="button" class="btn btn-warning btn-sm" title="Ação">
+            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+          </button>
+        </th>
         <th style="width: 1%;" scope="col">Categoria</th>
         <th style="width: 1%;" scope="col">Data</th>
         <th style="width: 1%;" scope="col">Valor</th>
@@ -68,7 +82,11 @@
         select: 0,
         sortable: false,
         render: (cell, idx) => {
-          return `<input type="checkbox" class="checkbox" id="checkbox${idx}" value="${idx}" onclick="this.closest('tr').className=(this.checked?'selected':'')" />`;
+          return `<div class="text-center">` +
+            `<input type="checkbox" class="checkbox" id="checkbox${idx}" value="${idx}"` +
+            ` onclick="this.closest('tr').className=(this.checked?'selected':'')"` +
+            ` style="zoom: 2" />` +
+            `</div>`;
         }
       },
       {
