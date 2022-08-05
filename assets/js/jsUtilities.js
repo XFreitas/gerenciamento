@@ -326,6 +326,8 @@ window.addEventListener('DOMContentLoaded', event => {
                 });
 
                 tableElement.JSTable = table;
+
+                table.on('update', () => tableElement.dispatchEvent(new Event('render')));
             });
     }
 
