@@ -94,6 +94,10 @@ module.exports = class Duplicatas {
             });
     }
 
+    pagar(req, res) {
+        console.log(req.body);
+    }
+
     serverProcessingRegistros = async (req, res) => {
         let data = {};
         try {

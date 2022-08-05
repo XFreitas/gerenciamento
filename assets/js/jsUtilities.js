@@ -44,24 +44,11 @@ window.addEventListener('DOMContentLoaded', event => {
                 return new FormData(this);
             }
 
-            const formData = {};
-
-            children.forEach(child => {
-                if (child.type == 'checkbox') {
-                    if (child.checked) {
-                        formData[child.name] = child.value;
-                    }
-                }
-                else if (child.type == 'radio') {
-                    if (child.checked) {
-                        formData[child.name] = child.value;
-                    }
-                } else if (child.value != '') {
-                    formData[child.name] = child.value;
-                }
-            });
-
-            return formData;
+            return Array
+                .from(new FormData(this), e => {
+                    return e.map(encodeURIComponent).join('=')
+                })
+                .join('&');
         }
 
         return null;

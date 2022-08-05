@@ -1,4 +1,4 @@
-<div class="modal-dialog">
+<div class="modal-dialog modal-xl">
   <div class="modal-content">
     <div class="modal-header">
       <h5 class="modal-title">
@@ -13,11 +13,11 @@
         <table class="table" id="tableRegistros" data-conta="<%= duplicata.conta %>">
           <thead>
             <tr>
-              <th scope="col">#</th>
-              <th scope="col">Categoria</th>
+              <th style="width: 1%;" scope="col">#</th>
+              <th style="width: 1%;" scope="col">Categoria</th>
               <th scope="col">Observação</th>
-              <th scope="col">Data</th>
-              <th scope="col">Valor</th>
+              <th style="width: 1%;" scope="col">Data</th>
+              <th style="width: 1%;" scope="col">Valor</th>
             </tr>
           </thead>
           <tbody></tbody>
@@ -75,12 +75,6 @@
               }
             },
             {
-              select: 2,
-              render: (cell, idx) => {
-                return `<div class="text-truncate">R$ ${cell.textContent}</div>`;
-              }
-            },
-            {
               select: 4,
               render: (cell, idx) => {
                 const aux = (cell.textContent.split('-'));
@@ -92,10 +86,22 @@
 
 
         tableElementRegistros.addEventListener("render", function() {
-          Array.from(tableElementRegistros.querySelectorAll('tbody tr td:nth-child(3) div')).forEach(function(cell) {
-            cell.className += " col-2 text-truncate";
-            cell.parentElement.style.width = "10px";
-            cell.parentElement.style.whiteSpace = "nowrap";
+          Array.from(tableElementRegistros.querySelectorAll('tbody tr td:nth-child(3)')).forEach(function(cell) {
+            /**
+             * @type {HTMLElement}
+             */
+            const td = cell;
+
+            td.style.whiteSpace = 'normal';
+            const textContent = td.textContent;
+            td.innerHTML = '';
+            const tdWidth = (td.offsetWidth - 50);
+            const div = document.createElement('div');
+            div.textContent = textContent;
+            div.style.width = tdWidth + 'px';
+            div.title = textContent;
+            div.className = 'text-truncate';
+            td.appendChild(div);
           });
         });
       }
