@@ -35,23 +35,23 @@ window.addEventListener('DOMContentLoaded', event => {
     }
 
     Element.prototype.serializeObject = function () {
-        if (this.tagName.toLowerCase() == 'form') {
-            const children = this.querySelectorAll('[name]:not(:disabled)');
-
-            const isUpload = this.getAttribute('enctype') === 'multipart/form-data';
-
-            if (isUpload) {
-                return new FormData(this);
-            }
-
-            return Array
-                .from(new FormData(this), e => {
-                    return e.map(encodeURIComponent).join('=')
-                })
-                .join('&');
+        let form = this;
+        if (this.tagName.toLowerCase() !== 'form') {
+            form = document.createElement('form');
+            form.appendChild(this.cloneNode(true));
         }
 
-        return null;
+        const isUpload = form.getAttribute('enctype') === 'multipart/form-data';
+
+        if (isUpload) {
+            return new FormData(form);
+        }
+
+        return Array
+            .from(new FormData(form), e => {
+                return e.map(encodeURIComponent).join('=')
+            })
+            .join('&');
     }
 
     String.prototype.toHtml = function () {
