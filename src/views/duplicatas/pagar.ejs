@@ -15,6 +15,7 @@
             <tr>
               <th scope="col">#</th>
               <th scope="col">Categoria</th>
+              <th scope="col">Observação</th>
               <th scope="col">Data</th>
               <th scope="col">Valor</th>
             </tr>
@@ -23,6 +24,7 @@
           <tfoot>
             <tr>
               <td></td>
+              <th></th>
               <th></th>
               <th></th>
               <th></th>
@@ -46,7 +48,7 @@
       const tableElementRegistros = document.querySelector(`#tableRegistros`);
 
       function init() {
-        console.clear();
+        // console.clear();
 
         form.submitModal({
           success: function(response) {
@@ -73,13 +75,28 @@
               }
             },
             {
-              select: 3,
+              select: 2,
+              render: (cell, idx) => {
+                return `<div class="text-truncate">R$ ${cell.textContent}</div>`;
+              }
+            },
+            {
+              select: 4,
               render: (cell, idx) => {
                 const aux = (cell.textContent.split('-'));
                 return `<div class="float-end text-danger fw-bold">R$ ${aux[aux.length - 1]}</div>`;
               }
             }
           ]
+        });
+
+
+        tableElementRegistros.addEventListener("render", function() {
+          Array.from(tableElementRegistros.querySelectorAll('tbody tr td:nth-child(3) div')).forEach(function(cell) {
+            cell.className += " col-2 text-truncate";
+            cell.parentElement.style.width = "10px";
+            cell.parentElement.style.whiteSpace = "nowrap";
+          });
         });
       }
 

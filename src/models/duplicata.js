@@ -32,19 +32,19 @@ class Duplicata extends MainModel {
     const a = await MainModel.serverProcessing({
       ...params,
       columns: [
-        "id", "categoria",
+        "id", "categoria","observacao",
         "dataformatted", "valorformatted",
       ],
       colsOrder: [
-        "id", "categoria",
+        "id", "categoria","observacao",
         "dataRegistro", "valor"
       ],
       colsWhere: [
-        "", "Categorias.nome",
+        "", "Categorias.nome","Registros.observacao",
         dataformatted, valorformatted,
       ],
       priorityGroupColumn: 'Registros.id',
-      select: `select Registros.id,\n` +
+      select: `select Registros.id, Registros.observacao,\n` +
         `  Categorias.nome as categoria, Registros.dataRegistro,` +
         `  Registros.valor, (${valorformatted}) as valorformatted,\n` +
         `  (${dataformatted}) as dataformatted\n`,
