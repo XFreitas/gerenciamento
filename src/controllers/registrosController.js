@@ -108,6 +108,9 @@ module.exports = class Registros {
 
         const data = req.query;
 
+        data.acoes = [{ value: ``, text: ` Selecione...` }, { value: `atualizar`, text: `ATUALIZAR` }, { value: `excluir`, text: `EXCLUIR` }];
+        data.campos = [{ value: ``, text: `Selecione...` }, { value: `categoria`, text: `CATEGORIA` }, { value: `divisao`, text: `DIVISÃO` }];
+
         data.categorias = [{
             value: '',
             text: "Selecione..."

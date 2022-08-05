@@ -15,15 +15,13 @@
                     <div class="modal-body">
                         <div class="mb-3">
                             <label for="acao" class="form-label">Ação</label>
-                            <%- formHelpers.formDropDown(`acao`, [ {value:``,text: ` Selecione...` },
-                                {value:`atualizar`,text:`ATUALIZAR`}, {value:`excluir`,text:`EXCLUIR`} ], `` ,
-                                `class="form-select" id="acao" onchange="acaoMain()" ` ) %>
+                            <%- formHelpers.formDropDown(`acao`, acoes, `` , `class="form-select" id="acao"
+                                onchange="acaoMain()" ` ) %>
                         </div>
                         <div div-acao style="display: none;">
                             <div class="mb-3">
                                 <label for="campo" class="form-label">Campo</label>
-                                <%- formHelpers.formDropDown(`campo`, [ {value:``,text: `Selecione...` },
-                                    {value:`categoria`,text:`CATEGORIA`} ], `` , `class="form-select" id="campo"
+                                <%- formHelpers.formDropDown(`campo`, campos, `` , `class="form-select" id="campo"
                                     onchange="acaoCampo()" ` ) %>
                             </div>
                             <div class="mb-3" style="display: none;" div-campo="categoria">
@@ -66,7 +64,11 @@
             function acaoCampo() {
                 form.querySelector(`[div-campo]`).style.display = `none`;
                 const campo = form.querySelector("#campo").value;
-                form.querySelector(`[div-campo="${campo}"]`).style.display = `block`;
+
+                if (form.querySelector(`[div-campo="${campo}"]`)) {
+                    form.querySelector(`[div-campo="${campo}"]`).style.display = `block`;
+                }
+
                 if (campo == 'categoria') {
                     form.querySelector(`#categoria`).focus();
                 }
