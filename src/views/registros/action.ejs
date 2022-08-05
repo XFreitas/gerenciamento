@@ -29,6 +29,18 @@
                                 <%- formHelpers.formDropDown(`categoria`, categorias, `` , `class="form-select"
                                     id="categoria" ` ) %>
                             </div>
+                            <div class="mb-3" style="display: none;" div-campo="divisao">
+                                <label for="divisao" class="form-label">Divisão</label>
+                                <div class="btn-group w-100" role="group" aria-label="Basic radio toggle button group">
+                                    <input type="radio" class="btn-check" name="divisao" id="divisao1" value="1"
+                                        autocomplete="off" checked>
+                                    <label class="btn btn-outline-primary" for="divisao1">SIM</label>
+
+                                    <input type="radio" class="btn-check" name="divisao" id="divisao0" value="0"
+                                        autocomplete="off" checked>
+                                    <label class="btn btn-outline-danger" for="divisao0">NÃO</label>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">

@@ -41,6 +41,7 @@
         <th style="width: 1%;" scope="col">Data</th>
         <th style="width: 1%;" scope="col">Valor</th>
         <th scope="col">Observação</th>
+        <th style="width: 1%;" scope="col">Divisão</th>
         <th style="width: 1%;" scope="col" class="text-center">Handle</th>
       </tr>
     </thead>
@@ -48,6 +49,7 @@
     <tfoot>
       <tr>
         <td></td>
+        <th></th>
         <th></th>
         <th></th>
         <th></th>
@@ -108,7 +110,7 @@
         render: (cell, idx) => `<small style="white-space: normal;">${cell.textContent}</small>`
       },
       {
-        select: 5,
+        select: 6,
         sortable: false,
         searchable: false,
         dataset: 'text-center',

@@ -79,7 +79,7 @@ module.exports = class Registros {
 
     action = async (req, res) => {
         if (req.method === "POST") {
-            const { ids, acao, campo, categoria } = req.body;
+            const { ids, acao, campo } = req.body;
             if (acao == 'excluir') {
                 Registro.destroy({
                     where: {
@@ -89,17 +89,16 @@ module.exports = class Registros {
                     }
                 });
             } else if (acao == 'atualizar') {
-                if (campo == 'categoria') {
-                    Registro.update({
-                        categoria: categoria,
-                    }, {
-                        where: {
-                            id: {
-                                [Op.in]: ids.split(","),
-                            }
+                const setUpdate = {
+                    [campo]: req.body[campo],
+                };
+                Registro.update(setUpdate, {
+                    where: {
+                        id: {
+                            [Op.in]: ids.split(","),
                         }
-                    });
-                }
+                    }
+                });
             }
 
             res.status(200).send({ success: true });

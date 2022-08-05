@@ -28,13 +28,21 @@ module.exports = {
             .trim()
             .escape()
             .custom(async (value, { req }) => {
-                if (value) {
-                    if (value == 'atualizar' && !req.body.campo) {
-                        throw new Error('O campo Campo é obrigatório.');
+                const msgArray = [];
+                if (value && value == 'atualizar') {
+                    if (!req.body.campo) {
+                        msgArray.push('O campo Campo é obrigatório.');
                     }
-                    if (value == 'atualizar' && req.body.campo == 'categoria' && !req.body.categoria) {
-                        throw new Error('O campo Categoria é obrigatório.');
+                    if (req.body.campo == 'categoria' && !req.body.categoria) {
+                        msgArray.push('O campo Categoria é obrigatório.');
                     }
+                    if (req.body.campo == 'divisao' && ['0', '1', 0, 1].indexOf(req.body.divisao) == -1) {
+                        msgArray.push('O campo Divisão é obrigatório.');
+                    }
+                }
+                if (msgArray.length > 0) {
+                    console.log(`<p>${msgArray.join('</p><p>')}</p>`);
+                    throw new Error(`<p>${msgArray.join('</p><p>')}</p>`);
                 }
                 return true;
             }),

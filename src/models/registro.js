@@ -36,26 +36,29 @@ class Registro extends MainModel {
       where.push(`Registros.conta = '${params.conta}'`);
     }
 
+    const divisaoformatted = "(CASE WHEN COALESCE(Registros.divisao, 0) = 0 THEN '' ELSE 'SIM' END)";
+
     const a = await MainModel.serverProcessing({
       ...params,
       columns: [
         "id", "categoria", "data", "valorformatted",
-        "observacao", "id",
+        "observacao", "divisaoformatted", "id",
       ],
       colsOrder: [
         '', "categoria", "dataRegistro",
-        "valor", "observacao",
+        "valor", "observacao", "divisao",
       ],
       colsWhere: [
         '', 'Categorias.nome', dataRegistro,
-        valorformatted, "Registros.observacao"
+        valorformatted, "Registros.observacao", divisaoformatted
       ],
       priorityGroupColumn: 'Registros.id',
       select: `select Categorias.nome as categoria,` +
         `    (${dataRegistro}) as data,` +
         `    (${valorformatted}) as valorformatted,` +
+        `    ${divisaoformatted} as divisaoformatted,` +
         `    Registros.observacao, Registros.id,` +
-        `    Registros.dataRegistro, Registros.valor`,
+        `    Registros.dataRegistro, Registros.valor, COALESCE(Registros.divisao, 0) as divisao`,
       from_join: `from Registros\n` +
         `left join Categorias on Categorias.id = Registros.categoria\n`,
       where: where.join('\n    and '),
