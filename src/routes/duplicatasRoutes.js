@@ -22,7 +22,7 @@ module.exports = function (application) {
     application.put(baseUri('update'), validate.createUpdate, (req, res) => duplicatasController.update(req, res));
     
     application.get(baseUri('pagar'), (req, res) => duplicatasController.showModalPagar(req, res));
-    application.post(baseUri('pagar'), (req, res) => duplicatasController.pagar(req, res));
+    application.post(baseUri('pagar'), validate.pagar,(req, res) => duplicatasController.pagar(req, res));
     
     application.get(baseUri('serverprocessing'), function (req, res) {
         duplicatasController.serverProcessing(req, res);

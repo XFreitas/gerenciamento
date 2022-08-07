@@ -44,7 +44,7 @@ class Duplicata extends MainModel {
         dataformatted, valorformatted,
       ],
       priorityGroupColumn: 'Registros.id',
-      select: `select Registros.id, Registros.observacao,\n` +
+      select: `select abs(Registros.valor) || '|' || Registros.id as id, Registros.observacao,\n` +
         `  Categorias.nome as categoria, Registros.dataRegistro,` +
         `  Registros.valor, (${valorformatted}) as valorformatted,\n` +
         `  (${dataformatted}) as dataformatted\n`,
