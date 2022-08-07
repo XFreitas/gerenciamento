@@ -1,3 +1,9 @@
+<style>
+  table#tableRegistros tbody tr td:nth-child(3) {
+    white-space: normal !important;
+  }
+</style>
+
 <div class="modal-dialog modal-xl">
   <div class="modal-content">
     <div class="modal-header">
@@ -9,6 +15,38 @@
     </div>
     <%- formHelpers.formOpen(`/duplicatas/pagar`, 'post', {id: duplicata.id}, `id="formpagarduplicata"`) %>
     <div class="modal-body">
+      <div class="mb-3">
+        <table class="table">
+          <tbody>
+            <tr>
+              <th class="text-end">Duplicata</th>
+              <td><%- duplicata.id %></td>
+              <th class="text-end">Data</th>
+              <td><%- duplicata.formattedData %></td>
+              <th class="text-end">Valor</th>
+              <td>R$ <%- duplicata.valor %></td>
+              <th class="text-end">Valor Pago</th>
+              <td>R$ <%- duplicata.valorpago %></td>
+            </tr>
+            <tr>
+              <th colspan="8" class="text-center">Soma dos registros selecionados: R$ <span id="spanSoma">0,00</span></th>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="mb-3">
+        <p><label>Selecionados</label></p>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" name="selecionados" id="selecionados1" value="1" onclick="updateSelecionados(this.value);">
+          <label class="form-check-label" for="selecionados1">Sim</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" checked name="selecionados" id="selecionados2" value="0" onclick="updateSelecionados(this.value);">
+          <label class="form-check-label" for="selecionados2">Não</label>
+        </div>
+      </div>
+
       <div class="card mb-3">
         <table class="table" id="tableRegistros" data-conta="<%= duplicata.conta %>">
           <thead>
@@ -48,12 +86,11 @@
       const tableElementRegistros = document.querySelector(`#tableRegistros`);
 
       function init() {
-        // console.clear();
+        console.clear();
 
         form.submitModal({
           success: function(response) {
             console.log(response);
-            // window.location.reload();
             tableElement.JSTable.update();
           }
         });
@@ -61,15 +98,27 @@
         tableElementRegistros.serverProcessing({
           ajax: `/duplicatas/serverprocessingregistros`,
           ajaxParams: {
-            conta: tableElementRegistros.dataset.conta
+            conta: tableElementRegistros.dataset.conta,
+            selecionado: 0,
           },
           columns: [{
               select: 0,
               sortable: false,
               render: (cell, idx) => {
+                const data = cell.textContent.split('|');
+                const id = data[1];
+                const valor = data[0];
+
+                const duplicata = data[2] ?? '';
+
+                if(duplicata){
+                  return `<button type="button" class="btn btn-danger btn-sm"><b>REMOVER</b></button>`;
+                }
+
+
                 return `<div class="text-center">` +
-                  `<input type="checkbox" class="checkbox" name="registro[]" value="${cell.textContent}"` +
-                  ` onclick="this.closest('tr').className=(this.checked?'selected':'')"` +
+                  `<input type="checkbox" class="checkbox" name="registros[]" value="${id}"` +
+                  ` onclick="checkboxClick(this);" data-valor="${valor}"` +
                   ` style="zoom: 1.8" />` +
                   `</div>`;
               }
@@ -92,7 +141,6 @@
              */
             const td = cell;
 
-            td.style.whiteSpace = 'normal';
             const textContent = td.textContent;
             td.innerHTML = '';
             const tdWidth = (td.offsetWidth - 50);
@@ -102,12 +150,40 @@
             div.title = textContent;
             div.className = 'text-truncate';
             td.appendChild(div);
+
+            new bootstrap.Tooltip(div);
           });
         });
       }
 
       function submitForm() {
         form.dispatchEvent(new Event('submit'));
+      }
+
+      function checkboxClick(checkbox) {
+        checkbox.closest('tr').className = (checkbox.checked ? 'selected' : '');
+
+        const spanSoma = modal.querySelector('#spanSoma');
+
+        spanSoma.textContent = nArredonda(
+          Array
+          .from(
+            tableElementRegistros
+            .querySelectorAll('tbody tr.selected input[type="checkbox"]')
+          )
+          .reduce((acc, cur) => (acc + nArredonda(cur.dataset.valor, 2)), 0), 2, true);
+
+      }
+
+      function updateSelecionados(value) {
+        delete tableElementRegistros.JSTable.config.ajaxParams['selecionado'];
+
+        if (value) {
+          tableElementRegistros.JSTable.config.ajaxParams['selecionado'] = value;
+        }
+
+        tableElementRegistros.JSTable.isSearching = true;
+        tableElementRegistros.JSTable.update();
       }
 
       setTimeout(() => init(), 250);
