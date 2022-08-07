@@ -29,10 +29,22 @@
               <td>R$ <%- duplicata.valorpago %></td>
             </tr>
             <tr>
-              <th colspan="6" class="text-center">Soma dos registros selecionados: R$ <span id="spanSoma">0,00</span></th>
+              <th colspan="8" class="text-center">Soma dos registros selecionados: R$ <span id="spanSoma">0,00</span></th>
             </tr>
           </tbody>
         </table>
+      </div>
+
+      <div class="mb-3">
+        <p><label>Selecionados</label></p>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" name="selecionados" id="selecionados1" value="1" onclick="updateSelecionados(this.value);">
+          <label class="form-check-label" for="selecionados1">Sim</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" checked name="selecionados" id="selecionados2" value="0" onclick="updateSelecionados(this.value);">
+          <label class="form-check-label" for="selecionados2">Não</label>
+        </div>
       </div>
 
       <div class="card mb-3">
@@ -86,7 +98,8 @@
         tableElementRegistros.serverProcessing({
           ajax: `/duplicatas/serverprocessingregistros`,
           ajaxParams: {
-            conta: tableElementRegistros.dataset.conta
+            conta: tableElementRegistros.dataset.conta,
+            selecionado: 0,
           },
           columns: [{
               select: 0,
@@ -95,6 +108,13 @@
                 const data = cell.textContent.split('|');
                 const id = data[1];
                 const valor = data[0];
+
+                const duplicata = data[2] ?? '';
+
+                if(duplicata){
+                  return `<button type="button" class="btn btn-danger btn-sm"><b>REMOVER</b></button>`;
+                }
+
 
                 return `<div class="text-center">` +
                   `<input type="checkbox" class="checkbox" name="registros[]" value="${id}"` +
@@ -153,6 +173,17 @@
           )
           .reduce((acc, cur) => (acc + nArredonda(cur.dataset.valor, 2)), 0), 2, true);
 
+      }
+
+      function updateSelecionados(value) {
+        delete tableElementRegistros.JSTable.config.ajaxParams['selecionado'];
+
+        if (value) {
+          tableElementRegistros.JSTable.config.ajaxParams['selecionado'] = value;
+        }
+
+        tableElementRegistros.JSTable.isSearching = true;
+        tableElementRegistros.JSTable.update();
       }
 
       setTimeout(() => init(), 250);

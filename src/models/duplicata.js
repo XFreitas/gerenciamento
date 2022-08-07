@@ -24,27 +24,36 @@ class Duplicata extends MainModel {
     if (typeof params.conta !== 'undefined') {
       where.push(`Registros.conta = '${params.conta}'`);
       where.push(`Registros.valor < 0`);
-      where.push(`Registros.duplicata isnull`);
-    } else {
+    }
+
+    if (typeof params.selecionado !== 'undefined') {
+      if (params.selecionado === '1') {
+        where.push(`Registros.duplicata is not null`);
+      } else {
+        where.push(`Registros.duplicata isnull`);
+      }
+    }
+
+    if (where.length === 0) {
       where.push(`1 = 2`);
     }
 
     const a = await MainModel.serverProcessing({
       ...params,
       columns: [
-        "id", "categoria","observacao",
+        "id", "categoria", "observacao",
         "dataformatted", "valorformatted",
       ],
       colsOrder: [
-        "id", "categoria","observacao",
+        "id", "categoria", "observacao",
         "dataRegistro", "valor"
       ],
       colsWhere: [
-        "", "Categorias.nome","Registros.observacao",
+        "", "Categorias.nome", "Registros.observacao",
         dataformatted, valorformatted,
       ],
       priorityGroupColumn: 'Registros.id',
-      select: `select abs(Registros.valor) || '|' || Registros.id as id, Registros.observacao,\n` +
+      select: `select abs(Registros.valor) || '|' || Registros.id || '|' || Registros.duplicata as id, Registros.observacao,\n` +
         `  Categorias.nome as categoria, Registros.dataRegistro,` +
         `  Registros.valor, (${valorformatted}) as valorformatted,\n` +
         `  (${dataformatted}) as dataformatted\n`,
