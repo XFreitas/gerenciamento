@@ -110,6 +110,10 @@
         render: (cell, idx) => `<small style="white-space: normal;">${cell.textContent}</small>`
       },
       {
+        select: [5],
+        render: (cell, idx) => `<div class="text-center">${cell.textContent}</div>`
+      },
+      {
         select: 6,
         sortable: false,
         searchable: false,

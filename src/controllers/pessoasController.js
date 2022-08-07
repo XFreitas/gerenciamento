@@ -55,4 +55,14 @@ module.exports = class Pessoas {
         }
         res.json(data);
     }
+
+    async autocomplete(req, res) {
+        var data = {};
+        try {
+            data = await PessoaModel.autocomplete(req.query ?? req.body);
+        } catch (error) {
+            console.log(error);
+        }
+        res.json(data);
+    }
 }

@@ -30,4 +30,8 @@ module.exports = function (application) {
     application.get(baseUri('serverprocessing'), function (req, res) {
         pessoaController.serverProcessing(req, res);
     });
+    
+    application.get(baseUri('autocomplete'), function (req, res) {
+        pessoaController.autocomplete(req, res);
+    });
 }

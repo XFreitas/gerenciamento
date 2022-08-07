@@ -26,6 +26,19 @@ class Pessoa extends MainModel {
     select: `SELECT id AS cod, nome, id`,
     from_join: `FROM Pessoas`,
   });
+
+  static autocomplete = async (params = {}) => {
+    const {
+      keyword
+    } = params;
+    const data = await sequelize.query(`SELECT id, nome AS value FROM Pessoas WHERE nome LIKE :keyword`, {
+      type: sequelize.QueryTypes.SELECT,
+      replacements: {
+        keyword: `%${keyword}%`
+      }
+    });
+    return data;
+  };
 }
 
 Pessoa.init({
