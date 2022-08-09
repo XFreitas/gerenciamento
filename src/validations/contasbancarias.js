@@ -19,6 +19,7 @@ module.exports = [
     /* -------------------------------------------------------------------------------------------------------------------- */
     body('numero')
         .notEmpty()
+        .customSanitizer(value => `${value.slice(0, -1)}-${value.slice(-1)}`)
         .withMessage('O campo número é obrigatório.')
         .custom(async (value, { req }) => {
             const codigo_banco = req.body.codigo_banco;

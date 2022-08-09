@@ -2,43 +2,57 @@
   <div class="modal-content">
     <div class="modal-header">
       <h5 class="modal-title">
-        <button type="button" class="btn btn-primary btn-sm" onclick="document.getElementById('crud').loadModal()"><i class="fas fa-sync-alt"></i></button>
+        <button type="button" class="btn btn-primary btn-sm" onclick="document.getElementById('crud').loadModal()"><i
+            class="fas fa-sync-alt"></i></button>
         <%= contabancaria ? 'Alterar' : 'Cadastrar' %> conta bancaria
       </h5>
       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
     </div>
-    <%- formHelpers.formOpen(`/contasbancarias/${contabancaria ? 'update' : 'create'}`, (contabancaria ? 'put' : 'post'), {id: contabancaria?.id}, `id="formcontabancaria"`) %>
-    <div class="modal-body">
-      <div class="mb-3">
-        <label for="tipoconta" class="form-label">Tipo da conta</label>
-        <%- formHelpers.formDropDown('tipoconta', tiposconta, contabancaria?.tipoconta, `class="form-select" id="tipoconta"`) %>
-      </div>
-      <div class="mb-3">
-        <label for="pessoa" class="form-label">Pessoa</label>
-        <%- formHelpers.formDropDown('pessoa', pessoas, contabancaria?.pessoa, `class="form-select" id="pessoa"`) %>
-      </div>
-      <div class="mb-3">
-        <label for="codigo_banco" class="form-label">Código do banco</label>
-        <%- formHelpers.formInput('codigo_banco', contabancaria?.codigo_banco, `class="form-control" id="codigo_banco" placeholder="Digite o código do banco..."`) %>
-      </div>
-      <div class="mb-3">
-        <label for="nome_banco" class="form-label">Nome banco</label>
-        <%- formHelpers.formInput('nome_banco', contabancaria?.nome_banco, `class="form-control" oninput="this.value = this.value.toUpperCase();" placeholder="Digite o nome do banco..."`) %>
-      </div>
-      <div class="mb-3">
-        <label for="numero" class="form-label">Número</label>
-        <%- formHelpers.formInput('numero', contabancaria?.numero, `class="form-control" id="numero" placeholder="Digite a conta com o dígito..."`) %>
-      </div>
-      <div class="mb-3">
-        <label for="descricao" class="form-label">Descrição</label>
-        <%- formHelpers.formTextarea('descricao', contabancaria?.descricao, 3, `class="form-control" id="descricao" oninput="this.value = this.value.toUpperCase();" placeholder="Digite alguma coisa..."`) %>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-      <button type="submit" class="btn btn-success">Salvar</button>
-    </div>
-    </form>
+    <%- formHelpers.formOpen(`/contasbancarias/${contabancaria ? 'update' : 'create' }`, (contabancaria ? 'put' : 'post'
+      ), {}, `id="formcontabancaria" `) %>
+
+      <% if (contabancaria?.id) { %>
+        <%- formHelpers.formHidden('id', contabancaria.id) %>
+          <% } %>
+
+            <div class="modal-body">
+              <div class="mb-3">
+                <label for="tipoconta" class="form-label">Tipo da conta</label>
+                <%- formHelpers.formDropDown('tipoconta', tiposconta, contabancaria?.tipoconta, `class="form-select"
+                  id="tipoconta" `) %>
+              </div>
+              <div class="mb-3">
+                <label for="pessoa" class="form-label">Pessoa</label>
+                <%- formHelpers.formDropDown('pessoa', pessoas, contabancaria?.pessoa, `class="form-select" id="pessoa"
+                  `) %>
+              </div>
+              <div class="mb-3">
+                <label for="codigo_banco" class="form-label">Código do banco</label>
+                <%- formHelpers.formInput('codigo_banco', contabancaria?.codigo_banco, `class="form-control"
+                  id="codigo_banco" placeholder="Digite o código do banco..." `) %>
+              </div>
+              <div class="mb-3">
+                <label for="nome_banco" class="form-label">Nome banco</label>
+                <%- formHelpers.formInput('nome_banco', contabancaria?.nome_banco, `class="form-control"
+                  oninput="this.value = this.value.toUpperCase();" placeholder="Digite o nome do banco..." `) %>
+              </div>
+              <div class="mb-3">
+                <label for="numero" class="form-label">Número</label>
+                <%- formHelpers.formInput('numero', contabancaria?.numero, `class="form-control" id="numero"
+                  placeholder="Digite a conta com o dígito..." `) %>
+              </div>
+              <div class="mb-3">
+                <label for="descricao" class="form-label">Descrição</label>
+                <%- formHelpers.formTextarea('descricao', contabancaria?.descricao, 3, `class="form-control"
+                  id="descricao" oninput="this.value = this.value.toUpperCase();" placeholder="Digite alguma coisa..."
+                  `) %>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+              <button type="submit" class="btn btn-success">Salvar</button>
+            </div>
+            </form>
   </div>
 </div>
 
@@ -53,16 +67,20 @@
 
       const inputNumero = document.querySelector('.modal #numero');
       inputNumero.mask('##########-#', {
-        reverse: true
+        autoUnmask: true,
+        removeMaskOnSubmit: true,
+        numericInput: true,
       });
 
       const inputCodigoBanco = document.querySelector('.modal #codigo_banco');
       inputCodigoBanco.mask('###', {
-        reverse: true
+        autoUnmask: true,
+        removeMaskOnSubmit: true,
+        numericInput: true,
       });
 
       form.submitModal({
-        success: function(response) {
+        success: function (response) {
           console.log(response);
           // window.location.reload();
           tableElement.JSTable.update();

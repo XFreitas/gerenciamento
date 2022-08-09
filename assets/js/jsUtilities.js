@@ -319,7 +319,7 @@ window.addEventListener('DOMContentLoaded', event => {
             });
     }
 
-    Element.prototype.autoComplete = function (url, options = {}) {
+    Element.prototype.axiosAutoComplete = function (url, options = {}) {
         const inp = this;
         inp.parentNode.classList.add('autocomplete');
 
@@ -334,9 +334,9 @@ window.addEventListener('DOMContentLoaded', event => {
         inp.addEventListener("input", function (e) {
             const self = this;
             var a, b, i, val = self.value
+            /*close any already open lists of autocompleted values*/
+            closeAllLists();
             if (val.length >= options.minChars) {
-                /*close any already open lists of autocompleted values*/
-                closeAllLists();
                 clearTimeout(timeout);
                 timeout = setTimeout(function () {
                     if (val) {

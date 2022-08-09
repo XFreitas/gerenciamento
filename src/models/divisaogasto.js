@@ -14,6 +14,10 @@ class DivisaoGasto extends MainModel {
     static associate(models) {
         // define association here
     }
+
+    static getData = async (params) => {
+        
+    }
 }
 
 DivisaoGasto.init({}, { sequelize });
