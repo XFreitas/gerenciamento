@@ -20,7 +20,7 @@ module.exports = class Duplicatas {
         const data = {};
         try {
             data['duplicata'] = null;
-            if (req.query) {
+            if (req.query.id) {
                 const id = req.query.id;
                 data['duplicata'] = await DuplicataModel.findByPk(id);
                 data['duplicata'].valor = nArredonda(data['duplicata'].valor, 2, true);

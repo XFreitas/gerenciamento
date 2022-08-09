@@ -9,13 +9,13 @@ module.exports.isEmpty = value => (typeof value === 'undefined'
     || Object.keys(value).length === 0);
 
 const removeVirgulaPonto = (valor) => {
-    if(typeof valor === 'undefined') {
+    if (typeof valor === 'undefined') {
         return '';
     }
-    
+
     // 0 000,00 => 0000.00
     valor = valor.replace(/\s/g, '');
-    
+
     // 0.000.000,00 => 0000000.00
     if ((valor.indexOf(',') > -1) && (valor.indexOf('.') > -1)) {
         valor = valor.replace(/\./g, '');
@@ -34,7 +34,7 @@ const removeVirgulaPonto = (valor) => {
 module.exports.removeVirgulaPonto = removeVirgulaPonto;
 
 module.exports.nArredonda = (numero, casasDecimais, formatar) => {
-    if (typeof numero === 'undefined') {
+    if (typeof numero === 'undefined' || numero === null) {
         return 0;
     }
 
