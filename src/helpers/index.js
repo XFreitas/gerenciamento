@@ -89,3 +89,11 @@ module.exports.nArredonda = (numero, casasDecimais, formatar) => {
 
     return parseFloat(n + '.' + decimais);
 }
+
+module.exports.handleError = (res, error) => {
+    console.log(error);
+    res.render('error', {
+        message: error.message,
+        error: error
+    });
+}

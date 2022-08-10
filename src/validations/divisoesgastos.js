@@ -6,29 +6,27 @@ module.exports = [
         .notEmpty()
         .withMessage('O campo Início é obrigatório.')
         .trim()
-        .escape()
-        .toUpperCase(),
+        .toUpperCase()
+        .customSanitizer(value => moment(value, "DD/MM/YYYY").format("YYYY-MM-DD"))
+        .isISO8601()
+        .withMessage('O campo Início deve ser uma data válida.')
+        .escape(),
     body('data_fim')
         .notEmpty()
         .withMessage('O campo Fim é obrigatório.')
         .trim()
-        .escape()
         .toUpperCase()
+        .customSanitizer(value => moment(value, "DD/MM/YYYY").format("YYYY-MM-DD"))
+        .isISO8601()
+        .withMessage('O campo Fim deve ser uma data válida.')
         .custom((value, { req }) => {
-            if (moment(value, 'DD/MM/YYYY').isValid() == false) {
-                throw new Error('O campo Fim deve ser uma data válida.');
-            }
-
-            if (moment(req.body?.data_inicio, 'DD/MM/YYYY').isValid() == false) {
-                throw new Error('O campo Início deve ser uma data válida.');
-            }
-
-            if (moment(value, 'DD/MM/YYYY').isAfter(moment(req.body?.data_inicio, 'DD/MM/YYYY')) == false) {
+            if (moment(value).isAfter(moment(req.body?.data_inicio)) == false) {
                 throw new Error('O campo Fim deve ser uma data posterior a Início.');
             }
 
             return true;
-        }),
+        })
+        .escape(),
     body(`pessoas`)
         .notEmpty()
         .withMessage('O campo Pessoas é obrigatório.')

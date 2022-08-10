@@ -1,1 +1,9 @@
-asdfasdf
+<% data.forEach(element=> { %>
+    <p>
+        <% element.contas.forEach(elConta => { %>
+            <% elConta.registros.forEach(elRegistro=> { %>
+                <% console.log(elRegistro); %>
+                    <% }) %>
+                        <% }) %>
+    </p>
+    <% }) %>

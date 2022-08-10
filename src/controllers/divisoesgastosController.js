@@ -7,17 +7,18 @@ module.exports = class DivisoesGastos {
         this.application = application;
     }
 
-    index = (req, res) => {
+    index = async (req, res) => {
         if (req.method === "POST") {
-            const data_inicio = moment(req.body.data_inicio, "DD/MM/YYYY").format("YYYY-MM-DD");
-            const data_fim = moment(req.body.data_fim, "DD/MM/YYYY").format("YYYY-MM-DD");
-            const pessoas = req.body.pessoas;
-            DivisaoGasto.getData({ data_inicio, data_fim, pessoas })
-                .then(data => {
-                    console.log(data);
-                    res.render("divisoesgastos/lista", data);
-                })
-                .catch(err => console.log(err));
+            try {
+                const data_inicio = req.body.data_inicio;
+                const data_fim = req.body.data_fim;
+                const pessoas = req.body.pessoas;
+                const data = await DivisaoGasto.getData({ data_inicio, data_fim, pessoas });
+                
+                res.render("divisoesgastos/lista", {data});
+            } catch (error) {
+                helpers.handleError(res, error);
+            }
             return;
         }
 
