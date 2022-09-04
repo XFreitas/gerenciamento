@@ -1,5 +1,7 @@
 const Sequelize = require('sequelize');
-
+/**
+ * @type {import('sequelize/types/sequelize').Sequelize}
+ */
 const sequelize = new Sequelize({
   dialect: 'sqlite',
   storage: './src/database/database.sqlite'

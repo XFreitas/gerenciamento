@@ -1,9 +1,33 @@
-<% data.forEach(element=> { %>
-    <p>
-        <% element.contas.forEach(elConta => { %>
-            <% elConta.registros.forEach(elRegistro=> { %>
-                <% console.log(elRegistro); %>
-                    <% }) %>
-                        <% }) %>
-    </p>
-    <% }) %>
+<% data.forEach(element => { %>
+<div class="col mb-4">
+  <div class="card border border-primary">
+    <div class="card-header bg-primary text-white py-0">
+      <%= element.pessoa.nome %>
+    </div>
+    <div class="card-body">
+      <div class="row mb-4">
+        <div class="input-group input-group-sm">
+          <label for="pessoas" class="input-group-text fw-bold">GASTOS TOTAIS</label>
+          <input type="text" class="form-control text-end" value="R$ <%= element.somaformatted %>" placeholder="GASTOS TOTAIS" readonly>
+        </div>
+      </div>
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">RECEBEDOR</th>
+            <th scope="col">VALOR</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% element.recebedor.forEach(element2 => { %>
+          <tr>
+            <td title="<%= element2.pessoa %>" class="text-truncate" style="cursor: default;"><%= element2.pessoa %></td>
+            <td class="text-nowrap align-middle text-end">R$ <%= element2.valorformatted %></td>
+          </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<% }) %>

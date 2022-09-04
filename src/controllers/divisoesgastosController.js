@@ -1,5 +1,4 @@
 const helpers = require("../helpers");
-const moment = require("moment");
 const DivisaoGasto = require("../models/divisaogasto");
 
 module.exports = class DivisoesGastos {

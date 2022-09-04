@@ -1,129 +1,128 @@
 <div class="row">
-    <div class="col-12">
-        <h1 class="mt-4">Divisão de Gasto</h1>
-        <ol class="breadcrumb mb-4">
-            <li class="breadcrumb-item"><a href="/">Início</a></li>
-            <li class="breadcrumb-item active">Divisão de Gasto</li>
-        </ol>
-    </div>
+  <div class="col-12">
+    <h1 class="mt-4">Divisão de Gasto</h1>
+    <ol class="breadcrumb mb-4">
+      <li class="breadcrumb-item"><a href="/">Início</a></li>
+      <li class="breadcrumb-item active">Divisão de Gasto</li>
+    </ol>
+  </div>
 </div>
 
 <%- formHelpers.formOpen(`/divisoesgastos`,'post',{},`id="formDivisaoGasto" `) %>
-    <div class="row">
-        <div class="col-3 mb-4">
-            <div class="card border border-primary">
-                <div class="card-header bg-primary text-white py-0">
-                    Período
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-12 input-group input-group-sm mb-3">
-                            <label for="data_inicio" class="input-group-text">Inicio</label>
-                            <input type="text" class="form-control text-center" id="data_inicio" name="data_inicio"
-                                value="" placeholder="__/__/____">
-                        </div>
-                        <div class="col-12 input-group input-group-sm">
-                            <label for="data_fim" class="input-group-text">Fim</label>
-                            <input type="text" class="form-control text-center" id="data_fim" name="data_fim" value=""
-                                placeholder="__/__/____">
-                        </div>
-                    </div>
-                </div>
-            </div>
+<div class="row mb-4">
+  <div class="col-3">
+    <div class="card border border-primary">
+      <div class="card-header bg-primary text-white py-0">
+        Período
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-12 input-group input-group-sm mb-3">
+            <label for="data_inicio" class="input-group-text">Inicio</label>
+            <input type="text" class="form-control text-center" id="data_inicio" name="data_inicio" value="" placeholder="__/__/____">
+          </div>
+          <div class="col-12 input-group input-group-sm">
+            <label for="data_fim" class="input-group-text">Fim</label>
+            <input type="text" class="form-control text-center" id="data_fim" name="data_fim" value="" placeholder="__/__/____">
+          </div>
         </div>
-        <div class="col-6 mb-4">
-            <div class="card border border-primary">
-                <div class="card-header bg-primary text-white py-0">
-                    Pessoas
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-12 mb-3">
-                            <div class="input-group input-group-sm">
-                                <label for="pessoas" class="input-group-text">Pessoas</label>
-                                <input type="text" class="form-control" id="pessoas" value="" placeholder="Pessoas">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row" id="divRenderPessoasSelected">
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-3">
-            <button type="submit" class="btn btn-primary w-100">GERAR</button>
-        </div>
+      </div>
     </div>
+  </div>
+  <div class="col-6">
+    <div class="card border border-primary">
+      <div class="card-header bg-primary text-white py-0">
+        Pessoas
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-12 mb-3">
+            <div class="input-group input-group-sm">
+              <label for="pessoas" class="input-group-text">Pessoas</label>
+              <input type="text" class="form-control" id="pessoas" value="" placeholder="Pessoas">
+            </div>
+          </div>
+        </div>
+        <div class="row" id="divRenderPessoasSelected">
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-3">
+    <button type="submit" class="btn btn-primary w-100">GERAR</button>
+  </div>
+</div>
 
-    <div id="generateDivisao"></div>
+<div class="row" id="generateDivisao">
+</div>
 
-    <%- formHelpers.formClose() %>
+<%- formHelpers.formClose() %>
 
-        <script type="text/javascript">
-            {
-                window.addEventListener('load', function () {
-                    const data_inicio = document.getElementById('data_inicio');
-                    flatpickr(data_inicio, {
-                        dateFormat: 'd/m/Y',
-                        position: 'auto center',
-                        locale: 'pt',
-                        allowInput: true,
-                        defaultDate: moment().add(-1, 'month').format('21/MM/YYYY'),
-                    });
-                    data_inicio.mask('99/99/9999');
+<script type="text/javascript">
+  {
+    window.addEventListener('load', function() {
+      const data_inicio = document.getElementById('data_inicio');
+      flatpickr(data_inicio, {
+        dateFormat: 'd/m/Y',
+        position: 'auto center',
+        locale: 'pt',
+        allowInput: true,
+        defaultDate: moment().add(-1, 'month').format('21/MM/YYYY'),
+      });
+      data_inicio.mask('99/99/9999');
 
-                    const data_fim = document.getElementById('data_fim');
-                    flatpickr(data_fim, {
-                        dateFormat: 'd/m/Y',
-                        position: 'auto center',
-                        locale: 'pt',
-                        allowInput: true,
-                        defaultDate: moment().format('20/MM/YYYY'),
-                    });
-                    data_fim.mask('99/99/9999');
+      const data_fim = document.getElementById('data_fim');
+      flatpickr(data_fim, {
+        dateFormat: 'd/m/Y',
+        position: 'auto center',
+        locale: 'pt',
+        allowInput: true,
+        defaultDate: moment().format('20/MM/YYYY'),
+      });
+      data_fim.mask('99/99/9999');
 
-                    const pessoas = document.getElementById('pessoas');
-                    pessoas.axiosAutoComplete(`/pessoas/autocomplete`, {
-                        minChars: 3,
-                        onSelect: data => {
-                            pessoas.value = '';
-                            const divRenderPessoasSelected = document.getElementById('divRenderPessoasSelected');
-                            if (divRenderPessoasSelected.querySelector(`[div-pessoa-selected="${data.id}"]`)) {
-                                return;
-                            }
-                            const divRenderPessoasSelectedItem = document.createElement('div');
-                            divRenderPessoasSelectedItem.className = 'col-6 mb-3';
-                            divRenderPessoasSelectedItem.setAttribute('div-pessoa-selected', data.id);
-                            divRenderPessoasSelectedItem.innerHTML = `    <div class="input-group input-group-sm">` +
-                                `        <input type="text" class="form-control" value="${data.value}" disabled>` +
-                                `        <button type="button" class="btn btn-outline-danger" onclick="this.closest('[div-pessoa-selected]').remove()">` +
-                                `            <i class="fa-solid fa-xmark"></i>` +
-                                `        </button>` +
-                                `    </div>` +
-                                `    <input type="hidden" name="pessoas[]" value="${data.id}">`;
-                            divRenderPessoasSelected.prepend(divRenderPessoasSelectedItem);
-                        },
-                        onOpen: () => { }
-                    });
+      const pessoas = document.getElementById('pessoas');
+      pessoas.axiosAutoComplete(`/pessoas/autocomplete`, {
+        minChars: 3,
+        onSelect: data => {
+          pessoas.value = '';
+          const divRenderPessoasSelected = document.getElementById('divRenderPessoasSelected');
+          if (divRenderPessoasSelected.querySelector(`[div-pessoa-selected="${data.id}"]`)) {
+            return;
+          }
+          const divRenderPessoasSelectedItem = document.createElement('div');
+          divRenderPessoasSelectedItem.className = 'col-6 mb-3';
+          divRenderPessoasSelectedItem.setAttribute('div-pessoa-selected', data.id);
+          divRenderPessoasSelectedItem.innerHTML = `    <div class="input-group input-group-sm">` +
+            `        <input type="text" class="form-control" value="${data.value}" disabled>` +
+            `        <button type="button" class="btn btn-outline-danger" onclick="this.closest('[div-pessoa-selected]').remove()">` +
+            `            <i class="fa-solid fa-xmark"></i>` +
+            `        </button>` +
+            `    </div>` +
+            `    <input type="hidden" name="pessoas[]" value="${data.id}">`;
+          divRenderPessoasSelected.prepend(divRenderPessoasSelectedItem);
+        },
+        onOpen: () => {}
+      });
 
-                    const form = document.getElementById('formDivisaoGasto');
-                    const generateDivisao = document.getElementById('generateDivisao');
-                    form.addEventListener('submit', function (e) {
-                        e.preventDefault();
-                        generateDivisao.innerHTML = `<div class="row"><div class="col-12 text-center"><img src="/assets/img/loading.gif" class="img-fluid"></div></div>`;
+      const form = document.getElementById('formDivisaoGasto');
+      const generateDivisao = document.getElementById('generateDivisao');
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        generateDivisao.innerHTML = `<div class="row"><div class="col-12 text-center"><img src="/assets/img/loading.gif" class="img-fluid"></div></div>`;
 
-                        axios.post(form.getAttribute('action'), form.serializeObject())
-                            .then(response => {
-                                generateDivisao.innerHTML = response.data;
-                            })
-                            .catch(error => {
-                                const divAlertDanger = document.createElement('div');
-                                divAlertDanger.className = 'alert alert-danger';
-                                divAlertDanger.innerHTML = msgByStatus(error.response);
-                                generateDivisao.innerHTML = '';
-                                generateDivisao.appendChild(divAlertDanger);
-                            });
-                    });
-                });
-            }
-        </script>
+        axios.post(form.getAttribute('action'), form.serializeObject())
+          .then(response => {
+            generateDivisao.innerHTML = response.data;
+          })
+          .catch(error => {
+            const divAlertDanger = document.createElement('div');
+            divAlertDanger.className = 'alert alert-danger';
+            divAlertDanger.innerHTML = msgByStatus(error.response);
+            generateDivisao.innerHTML = '';
+            generateDivisao.appendChild(divAlertDanger);
+          });
+      });
+    });
+  }
+</script>

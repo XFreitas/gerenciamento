@@ -52,10 +52,18 @@ module.exports = class Registros {
 
             const data = fs.readFileSync(filepath, "utf8");
 
-            const lines = data.split("\r\n");
+            const lines = data
+                .replace("\r", "\n")
+                .replace("\n\n", "\n")
+                .split("\r\n");
+
             const registros = [];
             lines.forEach(line => {
-                const registro = line.split(";");
+                const registro = line
+                    .replace("\r", " ")
+                    .replace("\n", " ")
+                    .split(";");
+
                 registros.push({
                     data: registro[0],
                     valor: registro[1],
